@@ -1,11 +1,16 @@
-# Expo + Tamagui minimal starter app
+# Payfren Mobile App
 
-This is a simple starter Expo app that has Tamagui configured
+The mobile app that makes banking easier for you, built using Expo, React Native, and Tamagui components.
 
-## 🚀 How to use
+## Getting Started
 
-#### Creating a new project
+- Clone this repository
+- Run `yarn install` to install dependencies
+- Run `yarn start` to install the development client and run the app
+- Run `yarn build` to build the app for production (Android and iOS)
 
-- Clone the repository
-- Install all dependencies using: `yarn install`
-- Start the app: `yarn start`
+## Dependencies
+
+- [Expo](https://expo.io/)
+- [React Native](https://reactnative.dev/)
+- [Tamagui](https://tamagui.dev/)

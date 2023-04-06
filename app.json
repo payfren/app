@@ -1,12 +1,26 @@
 {
   "expo": {
-    "name": "template-tamagui-expo",
-    "slug": "template-tamagui-expo",
-    "version": "1.0.0",
-    "assetBundlePatterns": ["**/*"],
+    "owner": "payfren",
+    "name": "app",
+    "slug": "app",
+    "splash": {
+      "//": "This is the image that users see on the loading screen",
+      "backgroundColor": "#ffffff",
+      "image": "./assets/"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
-    "plugins": ["expo-dev-client"]
+    "plugins": [
+      "expo-dev-client"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4a19a1c7-5c8a-4897-b458-bf5e43464d77"
+      }
     }
   }
+}
