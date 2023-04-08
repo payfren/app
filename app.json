@@ -3,10 +3,11 @@
     "owner": "payfren",
     "name": "app",
     "slug": "app",
-    "splash": {
-      "//": "This is the image that users see on the loading screen",
-      "backgroundColor": "#ffffff",
-      "image": "./assets/"
+    "android": {
+      "package": "com.payfren.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.payfren.app"
     },
     "assetBundlePatterns": [
       "**/*"
