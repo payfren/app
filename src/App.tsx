@@ -4,6 +4,7 @@ import appConfig from "../tamagui.config";
 import Home from "./pages/Home";
 import {Appearance} from "react-native";
 import {useEffect, useState} from "react";
+import {StatusBar} from "expo-status-bar";
 
 export default function App() {
     const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
@@ -26,6 +27,7 @@ export default function App() {
 
     return (
         <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
+            <StatusBar style={colorScheme === "dark" ? "light" : "dark"}/>
             <Home/>
         </TamaguiProvider>
     );

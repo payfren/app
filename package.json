@@ -8,6 +8,7 @@
     "burnt": "^0.10.0",
     "expo": "^48.0.9",
     "expo-dev-client": "~2.1.6",
+    "expo-status-bar": "~1.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.6",
