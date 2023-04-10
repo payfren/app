@@ -10,7 +10,7 @@
       "bundleIdentifier": "com.payfren.app"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/**"
     ],
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
