@@ -1,7 +1,7 @@
 {
   "expo": {
     "owner": "payfren",
-    "name": "app",
+    "name": "Payfren",
     "slug": "app",
     "android": {
       "package": "com.payfren.app"
