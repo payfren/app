@@ -7,6 +7,7 @@ import getColorScheme = Appearance.getColorScheme;
 export default function WelcomePage() {
     const lightLogo = require("../../assets/payfrenLogoTextDark.png");
     const darkLogo = require("../../assets/payfrenLogoTextLight.png");
+    const illustrationWelcome = require("../../assets/transactionApproved.png")
     let logoPath = getColorScheme() === "dark" ? darkLogo : lightLogo;
 
     return (
@@ -17,7 +18,10 @@ export default function WelcomePage() {
                     <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
                         <Image source={logoPath} height={60} resizeMode={"contain"}/>
                         <Spacer size={"$4"}/>
-                        <H5 textAlign={"center"} fontFamily={"Inter"}>Plătește si primește bani mai ușor direct în contul tău</H5>
+                        <H5 textAlign={"center"} fontFamily={"Inter"}>Plătește si primește bani mai ușor direct în
+                            contul tău</H5>
+                        <Spacer size={"$10"}/>
+                        <Image maxHeight={300} maxWidth={300} source={illustrationWelcome} resizeMode={"contain"}/>
                     </YStack>
                     <Spacer size={"$5"}/>
                 </XStack>
