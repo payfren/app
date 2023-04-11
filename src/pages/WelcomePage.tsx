@@ -12,28 +12,31 @@ export default function WelcomePage() {
 
     return (
         <YStack backgroundColor={"$background"} fullscreen={true} alignItems={"center"} justifyContent={"center"}>
-            <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
-                <XStack>
-                    <Spacer size={"$5"}/>
-                    <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
-                        <Image source={logoPath} height={60} resizeMode={"contain"}/>
-                        <Spacer size={"$4"}/>
-                        <H5 textAlign={"center"} fontFamily={"Inter"}>Plătește si primește bani mai ușor direct în
-                            contul tău</H5>
-                        <Spacer size={"$10"}/>
-                        <Image maxHeight={300} maxWidth={300} source={illustrationWelcome} resizeMode={"contain"}/>
-                    </YStack>
-                    <Spacer size={"$5"}/>
-                </XStack>
-            </YStack>
-            <XStack>
+            <XStack flex={1} alignItems={"center"} justifyContent={"center"}>
                 <Spacer size={"$5"}/>
-                <MainButton text={"Creează un cont"} flexSize={0.5}/>
-                <Spacer size={"$3"}/>
-                <SecondaryButton text={"Autentifică-te"} flexSize={0.5}/>
+                <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
+                    <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
+                        <Spacer size={"$13"}/>
+                        <YStack alignItems={"center"} justifyContent={"center"}>
+                            <Image source={logoPath} height={60} resizeMode={"contain"}/>
+                            <Spacer size={"$4"}/>
+                            <H5 textAlign={"center"} fontFamily={"Inter"}>Plătește si primește bani mai ușor direct în
+                                contul tău</H5>
+                        </YStack>
+                        <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
+                            <Image maxHeight={350} maxWidth={350} source={illustrationWelcome}
+                                   resizeMode={"contain"}/>
+                        </YStack>
+                    </YStack>
+                    <XStack>
+                        <MainButton text={"Creează un cont"} flexSize={0.5}/>
+                        <Spacer size={"$3"}/>
+                        <SecondaryButton text={"Autentifică-te"} flexSize={0.5}/>
+                    </XStack>
+                    <Spacer size={"$5"}/>
+                </YStack>
                 <Spacer size={"$5"}/>
             </XStack>
-            <Spacer size={"$5"}/>
         </YStack>
     );
 }
