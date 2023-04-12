@@ -1,5 +1,5 @@
 import {Button} from "tamagui";
 
-export default function SecondaryButton({text, flexSize}: { text: string, flexSize: number }) {
-    return <Button theme={"gray"} flex={flexSize}>{text}</Button>;
+export default function SecondaryButton({text, flexSize, onPress}: { text: string, flexSize?: number, onPress?: () => void}) {
+    return <Button theme={"gray"} flex={flexSize} onPress={onPress}>{text}</Button>;
 }

@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import * as NavigationBar from 'expo-navigation-bar';
-import SignUpPage from "./pages/SignUp";
+import VerifyOTPPage from "./pages/VerifyOTP";
 
 export default function App() {
     const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
@@ -31,6 +31,7 @@ export default function App() {
             );
         }, [colorScheme]);
     }
+
     const [loaded] = useFonts({
         Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
         InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
@@ -43,8 +44,8 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
-                <StatusBar style={colorScheme === "dark" ? "light" : "dark"}/>
-                <SignUpPage/>
+                <StatusBar translucent={true} style={colorScheme === "dark" ? "light" : "dark"}/>
+                <VerifyOTPPage/>
             </TamaguiProvider>
         </SafeAreaProvider>
     );

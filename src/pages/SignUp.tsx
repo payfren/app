@@ -18,7 +18,7 @@ export default function SignUpPage() {
                 <H2>Creează un cont</H2>
                 <Paragraph>Completează cu atenție datele cerute</Paragraph>
                 <Spacer size={"$4"}/>
-                <Form onSubmit={() => console.log("Test")}>
+                <Form onSubmit={() => console.log("Creare utilizator...")}>
                     <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"}/>
                     <Spacer size={"$4"}/>
                     <ExtendedInput label={"Numele tău"} placeholder={"Popescu"}/>
@@ -27,7 +27,7 @@ export default function SignUpPage() {
                     <Spacer size={"$7"}/>
                     <FormTrigger asChild>
                         {/*TODO: This button does not trigger the form submit*/}
-                        <MainButton text={"Înregistrare"} flexSize={null}/>
+                        <MainButton text={"Înregistrare"}/>
                     </FormTrigger>
                 </Form>
             </YStack>
