@@ -14,3 +14,12 @@ The mobile app that makes banking easier for you, built using Expo, React Native
 - [Expo](https://expo.io/)
 - [React Native](https://reactnative.dev/)
 - [Tamagui](https://tamagui.dev/)
+
+## Bugs and Issues
+
+- On Android, opening the keyboard may resize the screen. This is a known issue with Expo and React Native. To fix this, add the
+  following to your `app.json` file in "android" object:
+    ```json
+        "softwareKeyboardLayoutMode": "pan"
+    ```
+  This will not allow the keyboard to resize the screen, but it will allow the keyboard to go over the screen.
