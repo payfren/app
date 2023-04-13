@@ -13,20 +13,22 @@ export default function SignUpPage() {
     return (
         <Layout>
             <YStack justifyContent={"flex-start"} flex={1}>
+                <Spacer size={"$5"}/>
                 <Image source={logoPath} maxHeight={60} maxWidth={60} resizeMode={"contain"}/>
                 <Spacer size={"$2"}/>
                 <H2>Creează un cont</H2>
                 <Paragraph>Completează cu atenție datele cerute</Paragraph>
                 <Spacer size={"$4"}/>
-                <Form onSubmit={() => console.log("Creare utilizator...")}>
-                    <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"}/>
-                    <Spacer size={"$4"}/>
-                    <ExtendedInput label={"Numele tău"} placeholder={"Popescu"}/>
-                    <Spacer size={"$4"}/>
-                    <TelephoneInput/>
-                    <Spacer size={"$7"}/>
+                <Form flex={1} justifyContent={"space-between"} flexDirection={"column"}
+                      onSubmit={() => console.log("Creare utilizator...")}>
+                    <YStack flex={1} flexDirection={"column"}>
+                        <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"}/>
+                        <Spacer size={"$2"}/>
+                        <ExtendedInput label={"Numele tău"} placeholder={"Popescu"}/>
+                        <Spacer size={"$2"}/>
+                        <TelephoneInput/>
+                    </YStack>
                     <FormTrigger asChild>
-                        {/*TODO: This button does not trigger the form submit*/}
                         <MainButton text={"Înregistrare"}/>
                     </FormTrigger>
                 </Form>

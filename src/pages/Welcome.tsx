@@ -5,7 +5,7 @@ import SecondaryButton from "../components/SecondaryButton";
 import getColorScheme = Appearance.getColorScheme;
 import Layout from "../components/Layout";
 
-export default function WelcomePage() {
+export default function Welcome() {
     const lightLogo = require("../../assets/payfrenLogoTextDark.png");
     const darkLogo = require("../../assets/payfrenLogoTextLight.png");
     const illustrationWelcome = require("../../assets/transactionApproved.png")
@@ -32,7 +32,6 @@ export default function WelcomePage() {
                     <Spacer size={"$3"}/>
                     <SecondaryButton text={"Autentifică-te"} flexSize={0.5}/>
                 </XStack>
-                <Spacer size={"$5"}/>
             </YStack>
         </Layout>
     );

@@ -12,6 +12,7 @@ export default function Layout({children}) {
                 {children}
                 <Spacer size={"$5"}/>
             </XStack>
+            <Spacer size={"$5"}/>
         </YStack>
     );
 }
