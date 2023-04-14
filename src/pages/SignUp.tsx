@@ -4,18 +4,26 @@ import ExtendedInput from "../components/ExtendedInput";
 import TelephoneInput from "../components/TelephoneInput";
 import MainButton from "../components/MainButton";
 import {Appearance} from "react-native";
-import { useProfileStore } from '../store/ProfileStore';
+import {useSignUpStore} from '../clientStore/SignUpStore';
+import Supabase from "../serverStore/SupabaseClient";
 
 export default function SignUpPage() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
     let logoPath = Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
 
-    const phoneNum = useProfileStore((state) => state.profile.phoneNum);
+    const phoneNum = useSignUpStore((state) => state.profile.phoneNum);
 
     const handleFormSubmit = () => {
-        console.log("Creare utilizator...");
+        // This is a test to check if the Supabase client works
         console.log("Număr de telefon: ", phoneNum);
+        Supabase.auth.signInWithPassword({email: "matei@payfren.me", password: "matei@payfren"}).then((response) => {
+            console.log("Response: ", response);
+        }).then(() => {
+            Supabase.auth.getSession().then((session) => {
+                console.log("Session: ", session);
+            });
+        });
     }
 
     return (

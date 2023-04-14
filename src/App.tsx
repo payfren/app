@@ -7,6 +7,8 @@ import {StatusBar} from "expo-status-bar";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import * as NavigationBar from 'expo-navigation-bar';
 import SignUpPage from "./pages/SignUp";
+import Welcome from "./pages/Welcome";
+import VerifyOTPPage from "./pages/VerifyOTP";
 
 export default function App() {
     const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());

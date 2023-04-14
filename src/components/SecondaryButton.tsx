@@ -1,5 +1,20 @@
-import {Button} from "tamagui";
+import { Button } from "tamagui";
+import React from 'react';
 
-export default function SecondaryButton({text, flexSize, onPress}: { text: string, flexSize?: number, onPress?: () => void}) {
-    return <Button theme={"gray"} flex={flexSize} onPress={onPress}>{text}</Button>;
+interface SecondaryButtonProps {
+    text: string;
+    flexSize?: number;
+    onPress?: () => void;
 }
+
+const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps>(
+    ({text, flexSize, onPress}, ref) => {
+        return (
+            <Button theme={"gray"} flex={flexSize} onPress={onPress} ref={ref}>
+                {text}
+            </Button>
+        );
+    }
+);
+
+export default SecondaryButton;

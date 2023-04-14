@@ -1,13 +1,11 @@
-export interface Profile {
+export interface ISignUpProfile {
     phoneNum?: string;
     givenName?: string;
     familyName?: string;
-    username?: string;
 }
 
-export const defaultProfile: Profile = {
+export const defaultProfile: ISignUpProfile = {
     phoneNum: '+40 ',
     givenName: '',
     familyName: '',
-    username: '',
 }
