@@ -5,7 +5,7 @@ import TelephoneInput from "../components/TelephoneInput";
 import MainButton from "../components/MainButton";
 import {Appearance} from "react-native";
 import {useSignUpStore} from '../clientStore/SignUpStore';
-import Supabase from "../serverStore/SupabaseClient";
+import supabase from "../lib/Supabase";
 
 export default function SignUpPage() {
     const lightLogo = require("../../assets/logoLight.png");
@@ -17,12 +17,8 @@ export default function SignUpPage() {
     const handleFormSubmit = () => {
         // This is a test to check if the Supabase client works
         console.log("Număr de telefon: ", phoneNum);
-        Supabase.auth.signInWithPassword({email: "matei@payfren.me", password: "matei@payfren"}).then((response) => {
-            console.log("Response: ", response);
-        }).then(() => {
-            Supabase.auth.getSession().then((session) => {
-                console.log("Session: ", session);
-            });
+        supabase.auth.getSession().then((session) => {
+            console.log("Session: ", session);
         });
     }
 

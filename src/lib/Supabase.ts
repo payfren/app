@@ -15,7 +15,8 @@ const ExpoSecureStoreAdapter = {
     },
 };
 
-const Supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    // Store sensitive data in secure storage
     auth: {
         storage: ExpoSecureStoreAdapter as any,
         autoRefreshToken: true,
@@ -24,4 +25,4 @@ const Supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     },
 });
 
-export default Supabase;
+export default supabase;
