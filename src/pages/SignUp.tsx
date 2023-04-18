@@ -6,12 +6,14 @@ import MainButton from "../components/MainButton";
 import {Appearance} from "react-native";
 import {useSignUpStore} from '../clientStore/SignUpStore';
 import supabase from "../lib/Supabase";
+import {useMemo} from "react";
 
 export default function SignUpPage() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
-    let logoPath = Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
-
+    const logoPath = useMemo(() => {
+        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    }, [Appearance.getColorScheme()]);
     const phoneNum = useSignUpStore((state) => state.profile.phoneNum);
 
     const handleFormSubmit = () => {

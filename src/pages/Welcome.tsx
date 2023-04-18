@@ -2,14 +2,16 @@ import MainButton from "../components/MainButton";
 import {H5, Image, Spacer, XStack, YStack} from "tamagui";
 import {Appearance} from "react-native";
 import SecondaryButton from "../components/SecondaryButton";
-import getColorScheme = Appearance.getColorScheme;
 import Layout from "../components/Layout";
+import {useMemo} from "react";
 
 export default function Welcome() {
     const lightLogo = require("../../assets/payfrenLogoTextDark.png");
     const darkLogo = require("../../assets/payfrenLogoTextLight.png");
     const illustrationWelcome = require("../../assets/transactionApproved.png")
-    let logoPath = getColorScheme() === "dark" ? darkLogo : lightLogo;
+    const logoPath = useMemo(() => {
+        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    }, [Appearance.getColorScheme()]);
 
     return (
         <Layout>

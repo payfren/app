@@ -2,12 +2,14 @@ import Layout from "../components/Layout";
 import {Form, FormTrigger, H2, Image, Input, Paragraph, Spacer, XStack, YStack} from "tamagui";
 import {Appearance} from "react-native";
 import MainButton from "../components/MainButton";
-import {useRef, useState} from "react";
+import {useRef, useState, useMemo} from "react";
 
 export default function VerifyOTPPage() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
-    let logoPath = Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    const logoPath = useMemo(() => {
+        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    }, [Appearance.getColorScheme()]);
     const inputRefs = useRef([]);
     const [otpCode, setOtpCode] = useState('');
 
