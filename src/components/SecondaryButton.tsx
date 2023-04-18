@@ -1,4 +1,4 @@
-import { Button } from "tamagui";
+import {Button} from "tamagui";
 import React from 'react';
 
 interface SecondaryButtonProps {

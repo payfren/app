@@ -4,7 +4,7 @@ import {Appearance} from "react-native";
 import MainButton from "../components/MainButton";
 import {useMemo, useRef, useState} from "react";
 
-export default function VerifyOTPPage() {
+export default function VerifyOTP() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
     const logoPath = useMemo(() => {

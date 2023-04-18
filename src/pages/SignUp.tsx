@@ -8,7 +8,7 @@ import {useSignUpStore} from '../clientStore/SignUpStore';
 import supabase from "../lib/Supabase";
 import {useMemo} from "react";
 
-export default function SignUpPage() {
+export default function SignUp() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
     const logoPath = useMemo(() => {

@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {ISignUpProfile, defaultProfile} from '../interfaces/SignUpProfile';
+import {defaultProfile, ISignUpProfile} from '../interfaces/SignUpProfile';
 
 interface SignUpStore {
     profile: ISignUpProfile;

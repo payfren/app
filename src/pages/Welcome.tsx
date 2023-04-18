@@ -6,8 +6,8 @@ import Layout from "../components/Layout";
 import {useMemo} from "react";
 
 export default function Welcome() {
-    const lightLogo = require("../../assets/payfrenLogoTextDark.png");
-    const darkLogo = require("../../assets/payfrenLogoTextLight.png");
+    const darkLogo = require("../../assets/payfrenLogoTextDark.png");
+    const lightLogo = require("../../assets/payfrenLogoTextLight.png");
     const illustrationWelcome = require("../../assets/transactionApproved.png")
     const logoPath = useMemo(() => {
         return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
