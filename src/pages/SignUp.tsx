@@ -4,11 +4,25 @@ import ExtendedInput from "../components/ExtendedInput";
 import TelephoneInput from "../components/TelephoneInput";
 import MainButton from "../components/MainButton";
 import {Appearance} from "react-native";
+import {useSignUpStore} from '../clientStore/SignUpStore';
+import supabase from "../lib/Supabase";
+import {useMemo} from "react";
 
 export default function SignUpPage() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
-    let logoPath = Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    const logoPath = useMemo(() => {
+        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
+    }, [Appearance.getColorScheme()]);
+    const phoneNum = useSignUpStore((state) => state.profile.phoneNum);
+
+    const handleFormSubmit = () => {
+        // This is a test to check if the Supabase client works
+        console.log("Număr de telefon: ", phoneNum);
+        supabase.auth.getSession().then((session) => {
+            console.log("Session: ", session);
+        });
+    }
 
     return (
         <Layout>
@@ -20,11 +34,13 @@ export default function SignUpPage() {
                 <Paragraph>Completează cu atenție datele cerute</Paragraph>
                 <Spacer size={"$4"}/>
                 <Form flex={1} justifyContent={"space-between"} flexDirection={"column"}
-                      onSubmit={() => console.log("Creare utilizator...")}>
+                      onSubmit={handleFormSubmit}>
                     <YStack flex={1} flexDirection={"column"}>
-                        <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"}/>
+                        <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"} maxLength={30}
+                                       cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
-                        <ExtendedInput label={"Numele tău"} placeholder={"Popescu"}/>
+                        <ExtendedInput label={"Numele tău"} placeholder={"Popescu"} maxLength={30}
+                                       cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
                         <TelephoneInput/>
                     </YStack>

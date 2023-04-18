@@ -13,7 +13,10 @@ The mobile app that makes banking easier for you, built using Expo, React Native
 
 - [Expo](https://expo.io/)
 - [React Native](https://reactnative.dev/)
-- [Tamagui](https://tamagui.dev/)
+- [Tamagui](https://tamagui.dev/) -> UI components and color scheme
+- [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction) -> State management
+- [React Query](https://react-query.tanstack.com/) -> Data fetching and caching
+- [Supabase](https://supabase.com/) -> Database and authentication
 
 ## Bugs and Issues
 

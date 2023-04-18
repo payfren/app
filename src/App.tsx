@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import * as NavigationBar from 'expo-navigation-bar';
-import SignUpPage from "./pages/SignUp";
+import VerifyOTPPage from "./pages/VerifyOTP";
 
 export default function App() {
     const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
@@ -22,11 +22,7 @@ export default function App() {
         useEffect(() => {
             NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#000000" : "#ffffff").then(
                 () => {
-                    NavigationBar.setButtonStyleAsync(colorScheme === "dark" ? "light" : "dark").then(
-                        () => {
-                            console.log("NavigationBar color scheme changed");
-                        }
-                    );
+                    NavigationBar.setButtonStyleAsync(colorScheme === "dark" ? "light" : "dark");
                 }
             );
         }, [colorScheme]);
@@ -45,7 +41,7 @@ export default function App() {
         <SafeAreaProvider>
             <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
                 <StatusBar translucent={true} style={colorScheme === "dark" ? "light" : "dark"}/>
-                <SignUpPage/>
+                <VerifyOTPPage/>
             </TamaguiProvider>
         </SafeAreaProvider>
     );

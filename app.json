@@ -9,6 +9,7 @@
     "ios": {
       "bundleIdentifier": "com.payfren.app"
     },
+    "scheme": "payfren",
     "assetBundlePatterns": [
       "assets/**"
     ],
