@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import * as NavigationBar from 'expo-navigation-bar';
-import SignUp from "./pages/SignUp";
+import Welcome from "./pages/Welcome";
 
 export default function App() {
     const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
@@ -41,7 +41,7 @@ export default function App() {
         <SafeAreaProvider>
             <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
                 <StatusBar translucent={true} style={colorScheme === "dark" ? "light" : "dark"}/>
-                <SignUp/>
+                <Welcome/>
             </TamaguiProvider>
         </SafeAreaProvider>
     );

@@ -1,17 +1,19 @@
 import MainButton from "../components/MainButton";
 import {H5, Image, Spacer, XStack, YStack} from "tamagui";
-import {Appearance} from "react-native";
+import {useColorScheme} from "react-native";
 import SecondaryButton from "../components/SecondaryButton";
 import Layout from "../components/Layout";
 import {useMemo} from "react";
+import {Link} from "expo-router";
 
 export default function Welcome() {
     const darkLogo = require("../../assets/payfrenLogoTextDark.png");
     const lightLogo = require("../../assets/payfrenLogoTextLight.png");
-    const illustrationWelcome = require("../../assets/transactionApproved.png")
+    const illustrationWelcome = require("../../assets/welcomeImage.png")
+    const colorScheme = useColorScheme();
     const logoPath = useMemo(() => {
-        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
-    }, [Appearance.getColorScheme()]);
+        return colorScheme === "dark" ? lightLogo : darkLogo;
+    }, [colorScheme]);
 
     return (
         <Layout>
@@ -19,20 +21,24 @@ export default function Welcome() {
                 <Spacer size={"$5"}/>
                 <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
                     <YStack alignItems={"center"} justifyContent={"center"}>
-                        <Image source={logoPath} height={60} resizeMode={"contain"}/>
+                        <Image source={logoPath} height={55} resizeMode={"contain"}/>
                         <Spacer size={"$2"}/>
                         <H5 textAlign={"center"} fontFamily={"Inter"}>Plătește si primește bani mai ușor direct în
                             contul tău</H5>
                     </YStack>
                     <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
-                        <Image maxHeight={350} maxWidth={350} source={illustrationWelcome}
+                        <Image style={{height: "60%"}} source={illustrationWelcome}
                                resizeMode={"contain"}/>
                     </YStack>
                 </YStack>
                 <XStack>
-                    <MainButton text={"Creează un cont"} flexSize={0.5}/>
+                    <Link href={"/signup"} asChild>
+                        <MainButton text={"Creează un cont"} flexSize={0.5}/>
+                    </Link>
                     <Spacer size={"$3"}/>
-                    <SecondaryButton text={"Autentifică-te"} flexSize={0.5}/>
+                    <Link href={"/login"} asChild>
+                        <SecondaryButton text={"Autentifică-te"} flexSize={0.5}/>
+                    </Link>
                 </XStack>
             </YStack>
         </Layout>

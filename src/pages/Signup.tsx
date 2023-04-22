@@ -1,19 +1,21 @@
 import {Form, FormTrigger, H2, Image, Paragraph, Spacer, YStack} from "tamagui";
 import Layout from "../components/Layout";
 import ExtendedInput from "../components/ExtendedInput";
-import TelephoneInput from "../components/TelephoneInput";
 import MainButton from "../components/MainButton";
-import {Appearance} from "react-native";
+import {useColorScheme} from "react-native";
 import {useSignUpStore} from '../clientStore/SignUpStore';
 import supabase from "../lib/Supabase";
 import {useMemo} from "react";
+import {Link} from "expo-router";
+import PhoneNumberInput from "../components/PhoneNumberInput";
 
-export default function SignUp() {
+export default function Signup() {
     const lightLogo = require("../../assets/logoLight.png");
     const darkLogo = require("../../assets/logoDark.png");
+    const colorScheme = useColorScheme();
     const logoPath = useMemo(() => {
-        return Appearance.getColorScheme() === "dark" ? lightLogo : darkLogo;
-    }, [Appearance.getColorScheme()]);
+        return colorScheme === "dark" ? lightLogo : darkLogo;
+    }, [colorScheme]);
     const phoneNum = useSignUpStore((state) => state.profile.phoneNum);
 
     const handleFormSubmit = () => {
@@ -42,10 +44,12 @@ export default function SignUp() {
                         <ExtendedInput label={"Numele tău"} placeholder={"Popescu"} maxLength={30}
                                        cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
-                        <TelephoneInput/>
+                        <PhoneNumberInput/>
                     </YStack>
                     <FormTrigger asChild>
-                        <MainButton text={"Înregistrare"}/>
+                        <Link href={"/verify-otp"} asChild>
+                            <MainButton text={"Înregistrare"}/>
+                        </Link>
                     </FormTrigger>
                 </Form>
             </YStack>

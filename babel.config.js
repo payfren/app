@@ -23,6 +23,7 @@ module.exports = function (api) {
             ["module:react-native-dotenv", {
                 safe: '.env.template',
             }],
+            [require.resolve("expo-router/babel")],
         ],
     };
 };
