@@ -5,6 +5,7 @@ import {Form, FormTrigger, H2, Image, Paragraph, Spacer, YStack} from "tamagui";
 import PhoneNumberInput from "../components/PhoneNumberInput";
 import {Link} from "expo-router";
 import MainButton from "../components/MainButton";
+import {useSignInStore} from "../clientStore/SignInStore";
 
 export default function Login() {
     const lightLogo = require("../../assets/logoLight.png");
@@ -13,6 +14,12 @@ export default function Login() {
     const logoPath = useMemo(() => {
         return colorScheme === "dark" ? lightLogo : darkLogo;
     }, [colorScheme]);
+    const getPhoneNumber = useSignInStore(state => state.getPhoneNumber);
+    const setPhoneNumber = useSignInStore(state => state.setPhoneNumber);
+
+    const handleFormSubmit = () => {
+        console.log("Număr de telefon: ", getPhoneNumber());
+    }
 
     return (
         <Layout>
@@ -24,9 +31,9 @@ export default function Login() {
                 <Paragraph>Autentifică-te pentru a intra în cont</Paragraph>
                 <Spacer size={"$4"}/>
                 <Form flex={1} justifyContent={"space-between"} flexDirection={"column"}
-                      onSubmit={() => {}}>
+                      onSubmit={handleFormSubmit}>
                     <YStack flex={1} flexDirection={"column"}>
-                        <PhoneNumberInput/>
+                        <PhoneNumberInput getPhoneNumber={getPhoneNumber} setPhoneNumber={setPhoneNumber}/>
                     </YStack>
                     <FormTrigger asChild>
                         <Link href={"/verify-otp"} asChild>

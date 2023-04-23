@@ -16,14 +16,14 @@ export default function Signup() {
     const logoPath = useMemo(() => {
         return colorScheme === "dark" ? lightLogo : darkLogo;
     }, [colorScheme]);
-    const phoneNum = useSignUpStore((state) => state.profile.phoneNum);
+    const getPhoneNumber = useSignUpStore((state) => state.getPhoneNumber);
+    const setPhoneNumber = useSignUpStore((state) => state.setPhoneNumber);
 
     const handleFormSubmit = () => {
-        // This is a test to check if the Supabase client works
-        console.log("Număr de telefon: ", phoneNum);
-        supabase.auth.getSession().then((session) => {
-            console.log("Session: ", session);
-        });
+        console.log("Număr de telefon: ", getPhoneNumber());
+        // supabase.auth.getSession().then((session) => {
+        //     console.log("Session: ", session);
+        // });
     }
 
     return (
@@ -44,7 +44,7 @@ export default function Signup() {
                         <ExtendedInput label={"Numele tău"} placeholder={"Popescu"} maxLength={30}
                                        cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
-                        <PhoneNumberInput/>
+                        <PhoneNumberInput getPhoneNumber={getPhoneNumber} setPhoneNumber={setPhoneNumber}/>
                     </YStack>
                     <FormTrigger asChild>
                         <Link href={"/verify-otp"} asChild>
