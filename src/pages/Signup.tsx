@@ -4,7 +4,6 @@ import ExtendedInput from "../components/ExtendedInput";
 import MainButton from "../components/MainButton";
 import {useColorScheme} from "react-native";
 import {useSignUpStore} from '../clientStore/SignUpStore';
-import supabase from "../lib/Supabase";
 import {useMemo} from "react";
 import {Link} from "expo-router";
 import PhoneNumberInput from "../components/PhoneNumberInput";
@@ -18,9 +17,15 @@ export default function Signup() {
     }, [colorScheme]);
     const getPhoneNumber = useSignUpStore((state) => state.getPhoneNumber);
     const setPhoneNumber = useSignUpStore((state) => state.setPhoneNumber);
+    const getGivenName = useSignUpStore((state) => state.getGivenName);
+    const setGivenName = useSignUpStore((state) => state.setGivenName);
+    const getFamilyName = useSignUpStore((state) => state.getFamilyName);
+    const setFamilyName = useSignUpStore((state) => state.setFamilyName);
 
     const handleFormSubmit = () => {
         console.log("Număr de telefon: ", getPhoneNumber());
+        console.log("Prenume: ", getGivenName());
+        console.log("Nume: ", getFamilyName());
         // supabase.auth.getSession().then((session) => {
         //     console.log("Session: ", session);
         // });
@@ -38,16 +43,18 @@ export default function Signup() {
                 <Form flex={1} justifyContent={"space-between"} flexDirection={"column"}
                       onSubmit={handleFormSubmit}>
                     <YStack flex={1} flexDirection={"column"}>
-                        <ExtendedInput label={"Prenumele tău"} placeholder={"Matei"} maxLength={30}
+                        <ExtendedInput label={"Prenumele tău"} getValue={getGivenName} setValue={setGivenName}
+                                       placeholder={"Matei"} maxLength={30}
                                        cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
-                        <ExtendedInput label={"Numele tău"} placeholder={"Popescu"} maxLength={30}
+                        <ExtendedInput label={"Numele tău"} getValue={getFamilyName} setValue={setFamilyName}
+                                       placeholder={"Popescu"} maxLength={30}
                                        cursorColor={"orange"}/>
                         <Spacer size={"$2"}/>
                         <PhoneNumberInput getPhoneNumber={getPhoneNumber} setPhoneNumber={setPhoneNumber}/>
                     </YStack>
                     <FormTrigger asChild>
-                        <Link href={"/verify-otp"} asChild>
+                        <Link href={{pathname: "/verify-otp", params: {from: "signup"}}} asChild>
                             <MainButton text={"Înregistrare"}/>
                         </Link>
                     </FormTrigger>

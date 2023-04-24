@@ -1,8 +1,11 @@
 import Layout from "../components/Layout";
-import {Form, FormTrigger, H2, Image, Input, Paragraph, Spacer, XStack, YStack} from "tamagui";
+import {Form, FormTrigger, H2, Image, Paragraph, Spacer, YStack} from "tamagui";
 import {useColorScheme} from "react-native";
 import MainButton from "../components/MainButton";
-import {useMemo, useRef, useState} from "react";
+import {useCallback, useMemo} from "react";
+import OTPInput from "../components/OTPInput";
+import {useStoreHandlers} from "../lib/useStoreHandlers";
+import {useSearchParams, useFocusEffect} from "expo-router";
 
 export default function VerifyOTP() {
     const lightLogo = require("../../assets/logoLight.png");
@@ -11,46 +14,22 @@ export default function VerifyOTP() {
     const logoPath = useMemo(() => {
         return colorScheme === "dark" ? lightLogo : darkLogo;
     }, [colorScheme]);
-    const inputRefs = useRef([]);
-    const [otpCode, setOtpCode] = useState(Array(6).fill(''));
 
-    const handleOTPChange = (value, index) => {
-        // Update the otpCode with the new value at the given index
-        const newOtpCode = [...otpCode];
-        newOtpCode[index] = value;
-        setOtpCode(newOtpCode);
+    const {from} = useSearchParams();
+    const {setOTPCode, getOTPCode} = useStoreHandlers(from);
 
-        // If the value is not empty and the index is not the last one, focus on the next input
-        if (value && index < inputRefs.current.length - 1) {
-            inputRefs.current[index + 1].focus();
-        }
+    const handleOTPSubmit = () => {
+        console.log("OTP Code: ", getOTPCode());
     };
 
-    const handleInputFocus = (index) => {
-        const input = inputRefs.current[index];
-        if (input) {
-            input.setSelection(0, 1); // select all input when focused
-            input.focus();
-        }
-    };
-
-    const handleOTPKeyDown = (event, index) => {
-        const {key} = event.nativeEvent;
-        if (key.match(/^\d$/)) { // Check if the pressed key is a digit
-            handleOTPChange(key, index);
-        } else if (key === 'Backspace') {
-            if (otpCode[index]) {
-                otpCode[index] = ''; // Clear the value of the current input
-                setOtpCode([...otpCode]); // Update the state with the modified otpCode array
-            } else {
-                const prevIndex = index - 1;
-                if (prevIndex >= 0 && inputRefs.current[prevIndex]) {
-                    inputRefs.current[prevIndex].setSelection(0, 1);
-                    inputRefs.current[prevIndex].focus();
-                }
-            }
-        }
-    };
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                // Clear OTP code on unmount
+                setOTPCode(null);
+            };
+        }, [])
+    );
 
     return (
         <Layout>
@@ -62,30 +41,8 @@ export default function VerifyOTP() {
                 <Paragraph>Introdu codul unic de autentificare primit prin SMS</Paragraph>
                 <Spacer size={"$10"}/>
                 <Form flex={1} justifyContent={"space-between"} flexDirection={"column"}
-                      onSubmit={() => console.log("Validare OTP:", otpCode.join(""))}>
-                    {/*TODO: Make the OTP XStack more responsive*/}
-                    <XStack justifyContent={"space-between"}>
-                        {[0, 1, 2, 3, 4, 5].map((index) => (
-                            <Input
-                                focusStyle={{borderColor: "$orange9"}}
-                                caretHidden={true}
-                                selectionColor={"transparent"}
-                                key={index}
-                                cursorColor={"orange"}
-                                borderColor={"gray"}
-                                height={"$7"}
-                                width={"13%"}
-                                maxLength={1}
-                                keyboardType={"number-pad"}
-                                textAlign={"center"}
-                                padding={0}
-                                fontSize={"$8"}
-                                onFocus={() => handleInputFocus(index)}
-                                ref={(ref) => (inputRefs.current[index] = ref)}
-                                onKeyPress={(event) => handleOTPKeyDown(event, index)}
-                            />
-                        ))}
-                    </XStack>
+                      onSubmit={handleOTPSubmit}>
+                    <OTPInput setStoreOTPCode={setOTPCode}/>
                     <FormTrigger asChild>
                         <MainButton text={"Autentificare"}/>
                     </FormTrigger>

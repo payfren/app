@@ -5,5 +5,5 @@ export interface ISignInProfile {
 
 export const defaultSignIn: ISignInProfile = {
     phoneNumber: '+40 ',
-    otpCode: '',
+    otpCode: null,
 }

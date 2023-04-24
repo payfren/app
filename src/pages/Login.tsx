@@ -36,7 +36,7 @@ export default function Login() {
                         <PhoneNumberInput getPhoneNumber={getPhoneNumber} setPhoneNumber={setPhoneNumber}/>
                     </YStack>
                     <FormTrigger asChild>
-                        <Link href={"/verify-otp"} asChild>
+                        <Link href={{pathname:"/verify-otp", params:{from:"login"}}} asChild>
                             <MainButton text={"Conectare"}/>
                         </Link>
                     </FormTrigger>

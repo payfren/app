@@ -7,7 +7,7 @@ export interface ISignUpProfile {
 
 export const defaultSignUp: ISignUpProfile = {
     phoneNumber: '+40 ',
-    givenName: '',
-    familyName: '',
-    otpCode: '',
+    givenName: null,
+    familyName: null,
+    otpCode: null,
 }
