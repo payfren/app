@@ -26,19 +26,19 @@ export default function OTPInput({setStoreOTPCode})
     const handleInputFocus = (index) => {
         const input = inputRefs.current[index];
         if (input) {
-            input.setSelection(0, 1); // select all input when focused
+            input.setSelection(0, 1);
             input.focus();
         }
     };
 
     const handleOTPKeyDown = (event, index) => {
         const {key} = event.nativeEvent;
-        if (key.match(/^\d$/)) { // Check if the pressed key is a digit
+        if (key.match(/^\d$/)) {
             handleOTPChange(key, index);
         } else if (key === 'Backspace') {
             if (otpCode[index]) {
-                otpCode[index] = ''; // Clear the value of the current input
-                setOtpCode([...otpCode]); // Update the state with the modified otpCode array
+                otpCode[index] = '';
+                setOtpCode([...otpCode]);
                 setStoreOTPCode(otpCode.join(''));
             } else {
                 const prevIndex = index - 1;
@@ -47,10 +47,11 @@ export default function OTPInput({setStoreOTPCode})
                     inputRefs.current[prevIndex].focus();
                 }
             }
+        } else {
+            event.preventDefault();
         }
     };
 
-    {/*TODO: Make the OTP Input component more responsive*/}
     return (
         <XStack justifyContent={"space-between"}>
             {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -70,6 +71,7 @@ export default function OTPInput({setStoreOTPCode})
                     fontSize={"$8"}
                     onFocus={() => handleInputFocus(index)}
                     ref={(ref) => (inputRefs.current[index] = ref)}
+                    value={otpCode[index]}
                     onKeyPress={(event) => handleOTPKeyDown(event, index)}
                 />
             ))}

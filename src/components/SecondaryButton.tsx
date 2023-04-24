@@ -10,7 +10,12 @@ interface SecondaryButtonProps {
 const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps>(
     ({text, flexSize, onPress}, ref) => {
         return (
-            <Button theme={"gray"} flex={flexSize} onPress={onPress} ref={ref}>
+            <Button
+                theme={"gray"}
+                flex={flexSize}
+                onPress={onPress}
+                ref={ref}
+            >
                 {text}
             </Button>
         );

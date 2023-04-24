@@ -1,41 +1,74 @@
-import {Form, FormTrigger, H2, Image, Paragraph, Spacer, YStack} from "tamagui";
+import {Form, FormTrigger, H2, Paragraph, Spacer, YStack, Spinner} from "tamagui";
 import Layout from "../components/Layout";
 import ExtendedInput from "../components/ExtendedInput";
 import MainButton from "../components/MainButton";
-import {useColorScheme} from "react-native";
 import {useSignUpStore} from '../clientStore/SignUpStore';
-import {useMemo} from "react";
-import {Link} from "expo-router";
+import {useRouter} from "expo-router";
 import PhoneNumberInput from "../components/PhoneNumberInput";
+import Logo from "../components/Logo";
+import createNewUser from "../lib/createNewUser";
+import {useState} from "react";
 
 export default function Signup() {
-    const lightLogo = require("../../assets/logoLight.png");
-    const darkLogo = require("../../assets/logoDark.png");
-    const colorScheme = useColorScheme();
-    const logoPath = useMemo(() => {
-        return colorScheme === "dark" ? lightLogo : darkLogo;
-    }, [colorScheme]);
-    const getPhoneNumber = useSignUpStore((state) => state.getPhoneNumber);
-    const setPhoneNumber = useSignUpStore((state) => state.setPhoneNumber);
-    const getGivenName = useSignUpStore((state) => state.getGivenName);
-    const setGivenName = useSignUpStore((state) => state.setGivenName);
-    const getFamilyName = useSignUpStore((state) => state.getFamilyName);
-    const setFamilyName = useSignUpStore((state) => state.setFamilyName);
+    const {
+        getPhoneNumber,
+        setPhoneNumber,
+        getGivenName,
+        setGivenName,
+        getFamilyName,
+        setFamilyName,
+    } = useSignUpStore((state) => ({
+        getPhoneNumber: state.getPhoneNumber,
+        setPhoneNumber: state.setPhoneNumber,
+        getGivenName: state.getGivenName,
+        setGivenName: state.setGivenName,
+        getFamilyName: state.getFamilyName,
+        setFamilyName: state.setFamilyName,
+    }));
+    const router = useRouter();
+    const [status, setStatus] = useState<'off' | 'processing'>('off')
 
-    const handleFormSubmit = () => {
-        console.log("Număr de telefon: ", getPhoneNumber());
-        console.log("Prenume: ", getGivenName());
-        console.log("Nume: ", getFamilyName());
-        // supabase.auth.getSession().then((session) => {
-        //     console.log("Session: ", session);
-        // });
-    }
+    const handleFormSubmit = async () => {
+        setStatus('processing');
+        const phoneNumber = getPhoneNumber();
+        const givenName = getGivenName();
+        const familyName = getFamilyName();
+        if (!phoneNumber || phoneNumber.length !== 15) {
+            console.log("Invalid phone number!");
+            setStatus('off');
+            return;
+        }
+        if (!givenName || givenName.length < 3) {
+            console.log("Invalid given name!");
+            setStatus('off');
+            return;
+        }
+        if (!familyName || familyName.length < 3) {
+            console.log("Invalid family name!");
+            setStatus('off');
+            return;
+        }
+        // If everything is valid, create a new user
+        try {
+            const response = await createNewUser(phoneNumber, givenName, familyName);
+            if (response) {
+                console.log("Sent OTP!");
+                router.push({pathname: "/verify-otp", params: {from: "signup"}});
+            } else {
+                console.log("Failed to create user!");
+            }
+        }
+        finally {
+            setStatus('off');
+        }
+    };
+
 
     return (
         <Layout>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <Spacer size={"$5"}/>
-                <Image source={logoPath} maxHeight={60} maxWidth={60} resizeMode={"contain"}/>
+                <Logo/>
                 <Spacer size={"$2"}/>
                 <H2>Creează un cont</H2>
                 <Paragraph>Completează cu atenție datele cerute</Paragraph>
@@ -53,10 +86,9 @@ export default function Signup() {
                         <Spacer size={"$2"}/>
                         <PhoneNumberInput getPhoneNumber={getPhoneNumber} setPhoneNumber={setPhoneNumber}/>
                     </YStack>
-                    <FormTrigger asChild>
-                        <Link href={{pathname: "/verify-otp", params: {from: "signup"}}} asChild>
-                            <MainButton text={"Înregistrare"}/>
-                        </Link>
+                    <FormTrigger asChild disabled={status !== 'off'}>
+                        <MainButton icon={status === 'processing' && <Spinner color={"$color"}/>}
+                                    text={"Înregistrare"}/>
                     </FormTrigger>
                 </Form>
             </YStack>

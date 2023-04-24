@@ -1,26 +1,33 @@
 import Layout from "../components/Layout";
-import {Form, FormTrigger, H2, Image, Paragraph, Spacer, YStack} from "tamagui";
-import {useColorScheme} from "react-native";
+import {Form, FormTrigger, H2, Paragraph, Spacer, YStack} from "tamagui";
 import MainButton from "../components/MainButton";
-import {useCallback, useMemo} from "react";
+import {useCallback} from "react";
 import OTPInput from "../components/OTPInput";
 import {useStoreHandlers} from "../lib/useStoreHandlers";
-import {useSearchParams, useFocusEffect} from "expo-router";
+import {useFocusEffect, useSearchParams} from "expo-router";
+import Logo from "../components/Logo";
+import validateOTPCode from "../lib/validateOTPCode";
+import supabase from "../lib/supabase";
 
 export default function VerifyOTP() {
-    const lightLogo = require("../../assets/logoLight.png");
-    const darkLogo = require("../../assets/logoDark.png");
-    const colorScheme = useColorScheme();
-    const logoPath = useMemo(() => {
-        return colorScheme === "dark" ? lightLogo : darkLogo;
-    }, [colorScheme]);
-
     const {from} = useSearchParams();
-    const {setOTPCode, getOTPCode} = useStoreHandlers(from);
+    const {setOTPCode, getOTPCode, getPhoneNumber} = useStoreHandlers(from);
 
-    const handleOTPSubmit = () => {
-        console.log("OTP Code: ", getOTPCode());
+    const handleOTPSubmit = async () => {
+        const otpCode = getOTPCode();
+        const isValid = otpCode && /^[0-9]{6}$/.test(otpCode);
+        if (isValid) {
+            const phoneNumber = getPhoneNumber();
+            await validateOTPCode(otpCode, phoneNumber)
+                .then(async (response) => {
+                    if (response) {
+                        const user = await supabase.auth.getUser();
+                        console.log("User authenticated: ", user);
+                    }
+                });
+        }
     };
+
 
     useFocusEffect(
         useCallback(() => {
@@ -35,7 +42,7 @@ export default function VerifyOTP() {
         <Layout>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <Spacer size={"$5"}/>
-                <Image source={logoPath} maxHeight={60} maxWidth={60} resizeMode={"contain"}/>
+                <Logo/>
                 <Spacer size={"$2"}/>
                 <H2>Verificare cod</H2>
                 <Paragraph>Introdu codul unic de autentificare primit prin SMS</Paragraph>
