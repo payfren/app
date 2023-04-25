@@ -1,14 +1,11 @@
 import supabase from "./supabase";
 
-export default async function createNewUser(phoneNumber: string, givenName : string, familyName: string): Promise<boolean> {
+export default async function authenticateUser(phoneNumber: string): Promise<boolean> {
     const {error} = await supabase.auth.signInWithOtp(
         {
             phone: phoneNumber,
             options: {
-                data: {
-                    given_name: givenName,
-                    family_name: familyName,
-                }
+                shouldCreateUser: false,
             }
         })
     if (error) {

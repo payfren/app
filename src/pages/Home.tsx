@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Paragraph, YStack } from 'tamagui';
+import React, {useEffect, useState} from 'react';
+import {Button, Paragraph, Spacer, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
 
@@ -8,10 +8,10 @@ export default function Home() {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const currentUser = await supabase.auth.getUser();
-            setUser(currentUser.data.user);
+            const currentUser = await supabase.auth.getSession();
+            setUser(currentUser.data.session.user);
         };
-        fetchUser().then(() => console.log('User fetched'));
+        fetchUser();
     }, []);
 
     if (!user) {
@@ -27,8 +27,11 @@ export default function Home() {
     return (
         <Layout>
             <YStack justifyContent={"center"} alignContent={"center"} flex={1}>
-                <Paragraph textAlign={"center"}>Home</Paragraph>
-                <Paragraph textAlign={"center"}>Welcome, {user.user_metadata.given_name} {user.user_metadata.family_name}</Paragraph>
+                <Paragraph
+                    textAlign={"center"}>Welcome, {user.user_metadata.given_name} {user.user_metadata.family_name}</Paragraph>
+                <Paragraph textAlign={"center"}>You are logged in as {user.phone}</Paragraph>
+                <Spacer/>
+                <Button onPress={() => supabase.auth.signOut()}>Sign out</Button>
             </YStack>
         </Layout>
     );

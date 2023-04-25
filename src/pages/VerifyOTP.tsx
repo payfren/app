@@ -6,8 +6,7 @@ import OTPInput from "../components/OTPInput";
 import {useStoreHandlers} from "../lib/useStoreHandlers";
 import {useFocusEffect, useRouter, useSearchParams} from "expo-router";
 import Logo from "../components/Logo";
-import validateOTPCode from "../lib/validateOTPCode";
-import supabase from "../lib/supabase";
+import verifyOTPCode from "../lib/verifyOTPCode";
 
 export default function VerifyOTP() {
     const router = useRouter();
@@ -21,11 +20,9 @@ export default function VerifyOTP() {
         const isValid = otpCode && /^[0-9]{6}$/.test(otpCode);
         if (isValid) {
             const phoneNumber = getPhoneNumber();
-            await validateOTPCode(otpCode, phoneNumber)
+            await verifyOTPCode(otpCode, phoneNumber)
                 .then(async (response) => {
                     if (response) {
-                        const user = await supabase.auth.getUser();
-                        console.log("User authenticated: ", user);
                         router.push({pathname: "/home"});
                     }
                 });
