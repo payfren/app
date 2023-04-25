@@ -1,20 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Input, Paragraph, Spacer, YStack} from 'tamagui';
 
 export default function PhoneNumberInput({getPhoneNumber, setPhoneNumber}) {
     const [inputValue, setInputValue] = useState(getPhoneNumber());
 
+    {/*TODO: Rewrite this function to make it cleaner*/}
     const handlePhoneNumberChange = (text: string) => {
         let formattedPhoneNumber = text.replace(/[^\d+]/g, '');
+        if (formattedPhoneNumber.length <= 2) {
+            setInputValue('+40 ');
+            return;
+        }
         if (formattedPhoneNumber.startsWith('+40')) {
-            formattedPhoneNumber = formattedPhoneNumber.slice(3); // Remove the "+40" prefix
+            formattedPhoneNumber = formattedPhoneNumber.slice(3);
         }
         if (formattedPhoneNumber.length > 10) {
             formattedPhoneNumber = formattedPhoneNumber.substring(0, 10);
         }
         if (formattedPhoneNumber.length === 0) {
             setPhoneNumber('');
-            return;
         }
         formattedPhoneNumber = '+40' + formattedPhoneNumber;
         if (formattedPhoneNumber.length > 3) {
