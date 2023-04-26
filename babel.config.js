@@ -21,7 +21,8 @@ module.exports = function (api) {
             ],
             "react-native-reanimated/plugin",
             ["module:react-native-dotenv", {
-                safe: '.env.template',
+                safe: true,
+                allowUndefined: false,
             }],
             [require.resolve("expo-router/babel")],
         ],

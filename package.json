@@ -38,10 +38,7 @@
   },
   "scripts": {
     "start:development": "NODE_ENV=development expo start",
-    "start:production": "DISABLE_REACT_REFRESH=true NODE_ENV=production expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "build": "eas build --profile=preview --platform=android --local"
+    "start:production": "NODE_ENV=production expo start --no-dev --minify"
   },
   "version": "1.0.0"
 }
