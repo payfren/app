@@ -18,7 +18,7 @@ export default function Welcome() {
     return (
         <Layout>
             <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
-                <Spacer size={"$5"}/>
+                <Spacer size={"$7"}/>
                 <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
                     <YStack alignItems={"center"} justifyContent={"center"}>
                         <Image source={logoPath} height={55} resizeMode={"contain"}/>
@@ -27,7 +27,7 @@ export default function Welcome() {
                             contul tău</H5>
                     </YStack>
                     <YStack alignItems={"center"} justifyContent={"center"} flex={1}>
-                        <Image style={{height: "60%"}} source={illustrationWelcome}
+                        <Image style={{height: "55%"}} source={illustrationWelcome}
                                resizeMode={"contain"}/>
                     </YStack>
                 </YStack>

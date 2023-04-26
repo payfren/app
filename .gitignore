@@ -1,6 +1,7 @@
 .env
 .env.development
 .env.production
+android
 
 # OSX
 #
@@ -28,7 +29,6 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
-build/
 .idea
 .gradle
 local.properties

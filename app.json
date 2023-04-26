@@ -3,8 +3,18 @@
     "owner": "payfren",
     "name": "Payfren",
     "slug": "app",
+    "icon": "./assets/icon.png",
+    "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#FCFCFC"
+    },
     "android": {
-      "package": "com.payfren.app"
+      "package": "com.payfren.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptiveIcon.png",
+        "backgroundColor": "#FCFCFC"
+      }
     },
     "ios": {
       "bundleIdentifier": "com.payfren.app"
