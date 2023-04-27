@@ -7,7 +7,7 @@ export default function Layout({children}) {
     return (
         <YStack backgroundColor={"$background"} fullscreen={true} justifyContent={"center"} alignItems={"center"}
                 paddingTop={insets.top}>
-            <XStack flex={1} alignItems={"center"} justifyContent={"center"}>
+            <XStack justifyContent={"center"} flex={1}>
                 <Spacer size={"$5"}/>
                 {children}
                 <Spacer size={"$5"}/>

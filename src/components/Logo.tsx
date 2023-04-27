@@ -1,6 +1,6 @@
-import { Image } from "tamagui";
-import { useColorScheme } from "react-native";
-import { useMemo } from "react";
+import {Image} from "tamagui";
+import {useColorScheme} from "react-native";
+import {useMemo} from "react";
 
 const logoPaths = {
     light: require("../../assets/logoLight.png"),

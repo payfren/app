@@ -17,7 +17,6 @@ export default function Layout() {
         console.log("Current route:", currentPath);
     }, [currentPath]);
 
-
     useEffect(() => {
         if (Platform.OS === "android") {
             NavigationBar.setBackgroundColorAsync(
