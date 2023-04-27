@@ -7,7 +7,9 @@ import {TamaguiProvider} from "tamagui";
 import {StatusBar} from "expo-status-bar";
 import appConfig from "../tamagui.config";
 import {AuthProvider} from "../src/context/AuthProvider";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
 export default function Layout() {
     const [isReady, setReady] = useState(false);
     const colorScheme = useColorScheme();
@@ -48,12 +50,14 @@ export default function Layout() {
     ) : (
         <Fragment>
             {!isReady && <SplashScreen/>}
-            <AuthProvider>
-                <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
-                    <StatusBar translucent={true} style={"auto"}/>
-                    <Slot/>
-                </TamaguiProvider>
-            </AuthProvider>
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider>
+                    <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
+                        <StatusBar translucent={true} style={"auto"}/>
+                        <Slot/>
+                    </TamaguiProvider>
+                </AuthProvider>
+            </QueryClientProvider>
         </Fragment>
     );
 }

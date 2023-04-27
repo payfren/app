@@ -10,6 +10,7 @@
     "@tamagui/shorthands": "^1.15.36",
     "@tamagui/theme-base": "^1.17.0",
     "@tamagui/themes": "^1.15.36",
+    "@tanstack/react-query": "^4.29.5",
     "expo": "~48.0.11",
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.2.1",
