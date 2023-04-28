@@ -20,7 +20,8 @@ export default function AccountDetails({bankLogo, bankName, bankIBAN, bankBalanc
                     <H6>{bankName}</H6>
                     <Paragraph fontSize={"$3"} lineHeight={15}>{bankIBAN}</Paragraph>
                     <Spacer size={"$2"}/>
-                    <H5 lineHeight={22}>{bankBalance} {bankCurrency}</H5>
+                    <H5>{bankBalance} {bankCurrency}</H5>
+                    <Spacer size={"$1"}/>
                 </YStack>
             </XStack>
         </YStack>

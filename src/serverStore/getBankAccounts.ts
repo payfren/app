@@ -4,7 +4,8 @@ import supabase from '../lib/supabase';
 const fetchBankAccounts = async () => {
     const {data, error} = await supabase
         .from('bank_accounts')
-        .select('*');
+        .select('*')
+        .order('id', {ascending: true});
 
     if (error) {
         throw new Error(error.message);

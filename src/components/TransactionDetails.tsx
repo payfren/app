@@ -20,7 +20,8 @@ export default function TransactionDetails({payeeImage, payeeName, transactionDa
                     <H6>{payeeName}</H6>
                     <Paragraph fontSize={"$3"} lineHeight={15}>{transactionDate}</Paragraph>
                     <Spacer size={"$2"}/>
-                    <H5 lineHeight={22}>{transactionAmount} {transactionCurrency}</H5>
+                    <H5>{transactionAmount} {transactionCurrency}</H5>
+                    <Spacer size={"$1"}/>
                 </YStack>
             </XStack>
         </YStack>

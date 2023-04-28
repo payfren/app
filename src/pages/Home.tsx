@@ -10,24 +10,25 @@ import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
 import AppLoading from "./AppLoading";
 import getBankAccounts from "../serverStore/getBankAccounts";
+import TransactionDetails from "../components/TransactionDetails";
 
 const transactions = [
     {
-        payeeImage: 'https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQo4Q-lC7esLJfB6qz-8sBmdWbPVllmqLMEio6m8Q7SqJeoEx0%26s&sp=1682625367T6512aae911b48896c9a9af31390ce629807f39df3c0a7f589fa1ca1080fc9727',
+        payeeImage: 'https://images.crowdspring.com/blog/wp-content/uploads/2022/09/07053059/62bc70600acc8f22bbf77370_starbucks-logo.png',
         payeeName: 'Starbucks Victoriei',
         transactionDate: '12.04.2021, 09:11',
         transactionAmount: '-34,20',
         transactionCurrency: 'RON',
     },
     {
-        payeeImage: 'https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fbakeria.ro%2Fwp-content%2Fuploads%2F2021%2F04%2Fwww.bakeria.ro-brutarie-artizanala-01-2021.png&sp=1682625534Tf64c8491483cbfb6f94edaf68032a96554137e114b16e71fc18a289dec42ed0f',
+        payeeImage: 'https://bakeria.ro/wp-content/uploads/2021/04/www.bakeria.ro-brutarie-artizanala-01-2021.png',
         payeeName: 'Bakeria Panduri',
         transactionDate: '11.04.2021, 09:00',
         transactionAmount: '-12,00',
         transactionCurrency: 'RON',
     },
     {
-        payeeImage: 'https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fyt3.googleusercontent.com%2Fytc%2FAGIKgqNoNRD8Y7-ydomwccOXCRsrtM3SVG1veHCKxN5IOg%3Ds900-c-k-c0x00ffffff-no-rj&sp=1682625435Tbe84e34184530a61980e4c388a9b8b0984a1b93b02cfef90503c13a0bdc98b26',
+        payeeImage: 'https://yt3.googleusercontent.com/ytc/AGIKgqNoNRD8Y7-ydomwccOXCRsrtM3SVG1veHCKxN5IOg=s176-c-k-c0x00ffffff-no-rj',
         payeeName: 'Apple',
         transactionDate: '11.04.2021, 12:00',
         transactionAmount: '-49,99',
@@ -56,7 +57,7 @@ export default function Home() {
 
     return (
         <Layout>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 <YStack justifyContent={"flex-start"} flex={1}>
                     <Spacer size={"$5"}/>
                     <XStack justifyContent={"space-between"} alignItems={"center"}>
@@ -82,19 +83,19 @@ export default function Home() {
                             <Spacer/>
                         </React.Fragment>
                     )) ?? <Spinner color={"$color"}/>}
-                    <MainButton text={"Adaugă cont"}/>
+                    <Link href={"/home/add-account"} asChild>
+                        <MainButton text={"Adaugă cont"}/>
+                    </Link>
                     <Spacer size={"$5"}/>
                     <Paragraph>Tranzacții recente:</Paragraph>
                     <Spacer size={"$2"}/>
                     {transactions.map((transaction, index) => (
                         <React.Fragment key={index}>
-                            <AccountDetails
-                                bankLogo={transaction.payeeImage}
-                                bankBalance={transaction.transactionAmount}
-                                bankCurrency={transaction.transactionCurrency}
-                                bankIBAN={transaction.transactionDate}
-                                bankName={transaction.payeeName}
-                            />
+                            <TransactionDetails
+                                payeeImage={transaction.payeeImage} payeeName={transaction.payeeName}
+                                transactionDate={transaction.transactionDate}
+                                transactionAmount={transaction.transactionAmount}
+                                transactionCurrency={transaction.transactionCurrency}/>
                             <Spacer/>
                         </React.Fragment>
                     ))}
