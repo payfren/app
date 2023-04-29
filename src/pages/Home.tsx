@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ScrollView} from "react-native";
 import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
@@ -9,7 +9,7 @@ import {Link} from "expo-router";
 import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
 import AppLoading from "./AppLoading";
-import getBankAccounts from "../serverStore/getBankAccounts";
+import getUserBankAccounts from "../serverStore/getUserBankAccounts";
 import TransactionDetails from "../components/TransactionDetails";
 
 const transactions = [
@@ -39,7 +39,7 @@ const transactions = [
 
 export default function Home() {
     const [user, setUser] = useState(null);
-    const {isLoading, error, data} = getBankAccounts();
+    const {data: bankAccounts} = getUserBankAccounts();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -70,8 +70,7 @@ export default function Home() {
                     <H3>Bine ai venit, {user.user_metadata.given_name}!</H3>
                     <Paragraph>Lista conturilor tale:</Paragraph>
                     <Spacer size={"$2"}/>
-                    {/*TODO: Replace mock-up data with real data from database*/}
-                    {data?.map((account, index) => (
+                    {bankAccounts?.map((account, index) => (
                         <React.Fragment key={index}>
                             <AccountDetails
                                 bankLogo={account.bank_logo}
@@ -89,6 +88,7 @@ export default function Home() {
                     <Spacer size={"$5"}/>
                     <Paragraph>Tranzacții recente:</Paragraph>
                     <Spacer size={"$2"}/>
+                    {/*TODO: Replace mock-up data with real data from database*/}
                     {transactions.map((transaction, index) => (
                         <React.Fragment key={index}>
                             <TransactionDetails

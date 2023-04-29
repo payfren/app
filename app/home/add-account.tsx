@@ -1,3 +1,3 @@
-import AddAccount from "../../src/pages/AddAccount";
+import AddAccount from "../../src/pages/AddAcount.tsx";
 
 export default AddAccount;

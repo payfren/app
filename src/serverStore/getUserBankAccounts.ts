@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import supabase from '../lib/supabase';
 
-const fetchBankAccounts = async () => {
+const fetchUserBankAccounts = async () => {
     const {data, error} = await supabase
         .from('bank_accounts')
         .select('*')
@@ -14,6 +14,6 @@ const fetchBankAccounts = async () => {
     return data;
 };
 
-export default function getBankAccounts() {
-    return useQuery({queryKey: ['bankAccounts'], queryFn: fetchBankAccounts});
+export default function getUserBankAccounts() {
+    return useQuery({queryKey: ['bankAccounts'], queryFn: fetchUserBankAccounts});
 }

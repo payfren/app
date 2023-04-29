@@ -6,7 +6,7 @@ export default function AppLoading() {
     return (
         <Layout>
             <YStack justifyContent={'center'} alignContent={"center"} flex={1}>
-                <Spinner color={"$color"}/>
+                <Spinner size={"large"} color={"$orange10"}/>
             </YStack>
         </Layout>
     );

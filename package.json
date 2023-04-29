@@ -47,7 +47,8 @@
   "scripts": {
     "start:development": "NODE_ENV=development expo start",
     "start:production": "NODE_ENV=production expo start --no-dev --minify",
-    "build:android": "eas build --platform android --profile production --local"
+    "build:android": "eas build --platform android --profile production --local",
+    "push:secrets": "supabase secrets set --env-file ./supabase/.env"
   },
   "version": "1.0.0"
 }
