@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {ScrollView} from "react-native";
 import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
@@ -23,7 +23,7 @@ const transactions = [
     {
         payeeImage: 'https://bakeria.ro/wp-content/uploads/2021/04/www.bakeria.ro-brutarie-artizanala-01-2021.png',
         payeeName: 'Bakeria Panduri',
-        transactionDate: '11.04.2021, 09:00',
+        transactionDate: '11.04.2021, 12:09',
         transactionAmount: '-12,00',
         transactionCurrency: 'RON',
     },
@@ -81,7 +81,10 @@ export default function Home() {
                             />
                             <Spacer/>
                         </React.Fragment>
-                    )) ?? <Spinner color={"$color"}/>}
+                    )) ?? <Fragment>
+                        <Spinner color={"$color"}/>
+                        <Spacer/>
+                    </Fragment>}
                     <Link href={"/home/add-account"} asChild>
                         <MainButton text={"Adaugă cont"}/>
                     </Link>
