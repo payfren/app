@@ -5,7 +5,7 @@ import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
 import Logo from "../components/Logo";
 import {User} from "@tamagui/lucide-icons";
-import {Link} from "expo-router";
+import {Link, useSearchParams} from "expo-router";
 import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
 import AppLoading from "./AppLoading";
@@ -40,10 +40,13 @@ const transactions = [
 export default function Home() {
     const [user, setUser] = useState(null);
     const {data: bankAccounts} = getUserBankAccounts();
+    const {finished_consent_flow} = useSearchParams();
 
+    {/*TODO: Cache the session to avoid the loading state*/}
     useEffect(() => {
         const fetchUser = async () => {
             const currentUser = await supabase.auth.getSession();
+            await supabase.functions.invoke('verify_requisition');
             setUser(currentUser.data.session.user);
         };
         fetchUser();
@@ -83,7 +86,7 @@ export default function Home() {
                         </React.Fragment>
                     )) ?? <Fragment>
                         <Spinner color={"$color"}/>
-                        <Spacer/>
+                        <Spacer size={"$2"}/>
                     </Fragment>}
                     <Link href={"/home/add-account"} asChild>
                         <MainButton text={"Adaugă cont"}/>
