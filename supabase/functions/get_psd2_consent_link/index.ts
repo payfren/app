@@ -82,14 +82,12 @@ serve(async (req) => {
     const data = await response.json();
     const requisitionId: string = data['id'];
     const userReference: string = data['reference'];
-    const requisitionStatus: string = data['status'];
 
     // Save the requisition id in the database
     await supabase.from('psd2_requisitions').insert([
         {
             requisition_id: requisitionId,
             initiated_by: userReference,
-            status: requisitionStatus,
         }
     ]);
 

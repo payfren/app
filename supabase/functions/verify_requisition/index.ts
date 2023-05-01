@@ -77,10 +77,6 @@ serve(async (req) => {
     const status = requisitionStatusData['status'];
     if (status !== 'LN') {
         // User did not complete the requisition, so we can delete the requisition
-        // Delete requisition from database
-        await supabase.from('psd2_requisitions')
-            .delete()
-            .eq('requisition_id', requisitionId);
         // Delete from Nordigen API
         await fetch(`https://ob.nordigen.com/api/v2/requisitions/${requisitionId}/`, {
             method: "DELETE",
@@ -90,7 +86,6 @@ serve(async (req) => {
             }
         });
     } else {
-        await supabase.from('psd2_requisitions').update({status: 'LN'}).eq('requisition_id', requisitionId);
         const requisitionAccounts = requisitionStatusData['accounts'];
         // Add Nordigen account IDs to database
         for (const account of requisitionAccounts) {
@@ -103,6 +98,10 @@ serve(async (req) => {
                 ]);
         }
     }
+    // Delete requisition from database
+    await supabase.from('psd2_requisitions')
+        .delete()
+        .eq('requisition_id', requisitionId);
 
     return new Response(
         JSON.stringify({message: "Requisition verified"}),
