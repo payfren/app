@@ -1,5 +1,5 @@
 import {Fragment, useEffect, useState} from 'react';
-import {ScrollView} from "react-native";
+import {RefreshControl, ScrollView} from "react-native";
 import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
@@ -39,11 +39,11 @@ const transactions = [
 
 export default function Home() {
     const [user, setUser] = useState(null);
-    const {data: bankAccounts} = getUserBankAccounts();
+    const [refreshKey, setRefreshKey] = useState(0);
+    const {data: bankAccounts, isLoading} = getUserBankAccounts(refreshKey);
     const {finished_consent_flow} = useSearchParams();
     const router = useRouter();
 
-    /*TODO: Cache the session to avoid the loading state*/
     useEffect(() => {
         const fetchUser = async () => {
             const currentUser = await supabase.auth.getSession();
@@ -53,12 +53,17 @@ export default function Home() {
     }, []);
 
     const handleRedirectFromConsent = async () => {
-        console.log('Redirected from consent flow, verifying requisition...');
-        await supabase.functions.invoke('verify_requisition');
-    }
+        const {data, error} = await supabase.functions.invoke('verify_requisition');
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(data);
+            // Force refresh of bank accounts
+            setRefreshKey((prevKey) => prevKey + 1);
+        }
+    };
 
     if (finished_consent_flow === 'true') {
-        /*TODO: Remove finished consent flow parameter from router to not re-request falsely when returning to route*/
         router.replace('/home');
         handleRedirectFromConsent();
     }
@@ -71,7 +76,9 @@ export default function Home() {
 
     return (
         <Layout>
-            <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+            {/*TODO: Pull to refresh accounts and transactions*/}
+            <ScrollView showsVerticalScrollIndicator={false} bounces={false} refreshControl={
+                <RefreshControl refreshing={isLoading} onRefresh={() => setRefreshKey((prevKey) => prevKey + 1)}/>}>
                 <YStack justifyContent={"flex-start"} flex={1}>
                     <Spacer size={"$5"}/>
                     <XStack justifyContent={"space-between"} alignItems={"center"}>
@@ -96,8 +103,9 @@ export default function Home() {
                             <Spacer/>
                         </Fragment>
                     )) ?? <Fragment>
+                        <Spacer size={"$3"}/>
                         <Spinner color={"$color"}/>
-                        <Spacer size={"$2"}/>
+                        <Spacer size={"$5"}/>
                     </Fragment>}
                     <Link href={"/home/add-account"} asChild>
                         <MainButton text={"Adaugă cont"}/>

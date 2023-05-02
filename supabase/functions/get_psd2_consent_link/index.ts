@@ -7,6 +7,7 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
+    /*TODO: Handle the case when user creates another requisition before the previous one is finished*/
     // Get the user from the authorization header that is a JWT token
     const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey, {
         global:
@@ -81,7 +82,6 @@ serve(async (req) => {
 
     const data = await response.json();
     const requisitionId: string = data['id'];
-    console.log(data);
     // Save the requisition id in the database
     await supabase.from('psd2_requisitions').insert([
         {

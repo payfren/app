@@ -74,7 +74,6 @@ serve(async (req) => {
     });
 
     const requisitionStatusData = await requisitionStatus.json();
-    console.log(requisitionStatusData);
     const status = requisitionStatusData['status'];
     if (status !== 'LN') {
         // User did not complete the requisition, so we can delete the requisition
@@ -90,7 +89,6 @@ serve(async (req) => {
         const requisitionAccounts = requisitionStatusData['accounts'];
         // Add Nordigen account IDs to database
         for (const account of requisitionAccounts) {
-            console.log(account);
             await supabase.from('bank_accounts')
                 .insert([
                     {
@@ -106,7 +104,11 @@ serve(async (req) => {
         .eq('requisition_id', requisitionId);
 
     return new Response(
-        JSON.stringify({message: "Requisition verified"}),
+        JSON.stringify(
+            {
+                message: "Requisition verified",
+                account_ids: [...requisitionStatusData['accounts']],
+            }),
         {
             status: 200,
             headers: {

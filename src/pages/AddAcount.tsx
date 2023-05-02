@@ -1,9 +1,10 @@
 import Layout from "../components/Layout.tsx";
-import {H2, Paragraph, Spacer, YStack, Spinner} from "tamagui";
+import {H2, Paragraph, Spacer, Spinner, YStack} from "tamagui";
 import Logo from "../components/Logo.tsx";
 import {ScrollView} from "react-native";
 import useAvailableBanks from "../serverStore/getAvailableBanks.ts";
 import AddBankButton from "../components/AddBankButton.tsx";
+import {Fragment} from "react";
 
 export default function AddAccount() {
     const {data: availableBanks} = useAvailableBanks();
@@ -18,11 +19,12 @@ export default function AddAccount() {
                 <Paragraph>Selectează una din băncile disponibile pentru conectare în Payfren</Paragraph>
                 <Spacer size={"$5"}/>
                 <ScrollView showsVerticalScrollIndicator={false}>
+                    {/*TODO: Lock all buttons if one of them is pressed*/}
                     {availableBanks?.map((bank, index) => (
-                        <React.Fragment key={index}>
+                        <Fragment key={index}>
                             <AddBankButton bankName={bank.name} bankId={bank.id}/>
                             <Spacer/>
-                        </React.Fragment>
+                        </Fragment>
                     )) ?? <Spinner color={"$color"}/>}
                 </ScrollView>
             </YStack>
