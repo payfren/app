@@ -5,7 +5,7 @@ import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
 import Logo from "../components/Logo";
 import {User} from "@tamagui/lucide-icons";
-import {Link, useSearchParams} from "expo-router";
+import {Link, useRouter, useSearchParams} from "expo-router";
 import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
 import AppLoading from "./AppLoading";
@@ -41,16 +41,27 @@ export default function Home() {
     const [user, setUser] = useState(null);
     const {data: bankAccounts} = getUserBankAccounts();
     const {finished_consent_flow} = useSearchParams();
+    const router = useRouter();
 
-    {/*TODO: Cache the session to avoid the loading state*/}
+    /*TODO: Cache the session to avoid the loading state*/
     useEffect(() => {
         const fetchUser = async () => {
             const currentUser = await supabase.auth.getSession();
-            await supabase.functions.invoke('verify_requisition');
             setUser(currentUser.data.session.user);
         };
         fetchUser();
     }, []);
+
+    const handleRedirectFromConsent = async () => {
+        console.log('Redirected from consent flow, verifying requisition...');
+        await supabase.functions.invoke('verify_requisition');
+    }
+
+    if (finished_consent_flow === 'true') {
+        /*TODO: Remove finished consent flow parameter from router to not re-request falsely when returning to route*/
+        router.replace('/home');
+        handleRedirectFromConsent();
+    }
 
     if (!user) {
         return (
@@ -74,7 +85,7 @@ export default function Home() {
                     <Paragraph>Lista conturilor tale:</Paragraph>
                     <Spacer size={"$2"}/>
                     {bankAccounts?.map((account, index) => (
-                        <React.Fragment key={index}>
+                        <Fragment key={index}>
                             <AccountDetails
                                 bankLogo={account.bank_logo}
                                 bankBalance={account.balance}
@@ -83,7 +94,7 @@ export default function Home() {
                                 bankName={account.bank_name}
                             />
                             <Spacer/>
-                        </React.Fragment>
+                        </Fragment>
                     )) ?? <Fragment>
                         <Spinner color={"$color"}/>
                         <Spacer size={"$2"}/>
@@ -96,14 +107,14 @@ export default function Home() {
                     <Spacer size={"$2"}/>
                     {/*TODO: Replace mock-up data with real data from database*/}
                     {transactions.map((transaction, index) => (
-                        <React.Fragment key={index}>
+                        <Fragment key={index}>
                             <TransactionDetails
                                 payeeImage={transaction.payeeImage} payeeName={transaction.payeeName}
                                 transactionDate={transaction.transactionDate}
                                 transactionAmount={transaction.transactionAmount}
                                 transactionCurrency={transaction.transactionCurrency}/>
                             <Spacer/>
-                        </React.Fragment>
+                        </Fragment>
                     ))}
                 </YStack>
             </ScrollView>

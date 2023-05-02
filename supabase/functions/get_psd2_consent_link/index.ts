@@ -29,6 +29,7 @@ serve(async (req) => {
             }
         );
     }
+    const userId = user_data!.user.id;
 
     // Get the Institution ID from the request body
     let institution_id: string;
@@ -75,19 +76,17 @@ serve(async (req) => {
             "redirect": "payfren://home?finished_consent_flow=true",
             "institution_id": institution_id,
             "user_language": "RO",
-            "reference": user_data.user.id,
         }),
     });
 
     const data = await response.json();
     const requisitionId: string = data['id'];
-    const userReference: string = data['reference'];
-
+    console.log(data);
     // Save the requisition id in the database
     await supabase.from('psd2_requisitions').insert([
         {
             requisition_id: requisitionId,
-            initiated_by: userReference,
+            initiated_by: userId,
         }
     ]);
 

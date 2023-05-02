@@ -1,5 +1,5 @@
 import {Button, Spinner} from "tamagui";
-import supabase from "../lib/supabase.ts";
+import supabase from "../lib/supabase";
 import * as Linking from 'expo-linking';
 import {useState} from "react";
 
