@@ -4,12 +4,11 @@ import supabase from '../lib/supabase';
 const fetchUserBankAccounts = async () => {
     const {data, error : accountsError} = await supabase
         .from('bank_accounts')
-        .select('*')
-        .order('id', {ascending: true});
+        .select('nordigen_account_id')
     if (accountsError) {
         throw new Error(accountsError.message);
     }
-
+    console.log(data)
     const {error: refreshError} = await supabase.functions.invoke('get_accounts_data', {
         body :
             {
@@ -23,7 +22,7 @@ const fetchUserBankAccounts = async () => {
     const {data: bankAccounts, error} = await supabase
         .from('bank_accounts')
         .select('*')
-        .order('id', {ascending: true});
+        .order('created_at', {ascending: false})
     if (error) {
         throw new Error(error.message);
     }

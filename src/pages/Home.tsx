@@ -11,6 +11,7 @@ import MainButton from "../components/MainButton";
 import AppLoading from "./AppLoading";
 import getUserBankAccounts from "../serverStore/getUserBankAccounts";
 import TransactionDetails from "../components/TransactionDetails";
+import SecondaryButton from "../components/SecondaryButton";
 
 const transactions = [
     {
@@ -41,7 +42,7 @@ export default function Home() {
     const [user, setUser] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0);
     const {data: bankAccounts, isLoading} = getUserBankAccounts(refreshKey);
-    const {finished_consent_flow} = useSearchParams();
+    const {finished_consent_flow, ref} = useSearchParams();
     const router = useRouter();
 
     useEffect(() => {
@@ -52,20 +53,22 @@ export default function Home() {
         fetchUser();
     }, []);
 
-    const handleRedirectFromConsent = async () => {
-        const {data, error} = await supabase.functions.invoke('verify_requisition');
+    const handleRedirectFromConsent = async (consentRef) => {
+        const {error} = await supabase.functions.invoke('verify_requisition', {
+            body: {
+                consent_id: consentRef,
+            }
+        });
         if (error) {
             console.log(error);
-        } else {
-            console.log(data);
-            // Force refresh of bank accounts
-            setRefreshKey((prevKey) => prevKey + 1);
         }
     };
 
     if (finished_consent_flow === 'true') {
+        handleRedirectFromConsent(ref).then(() => {
+            setRefreshKey((prevKey) => prevKey + 1);
+        });
         router.replace('/home');
-        handleRedirectFromConsent();
     }
 
     if (!user) {
@@ -76,10 +79,9 @@ export default function Home() {
 
     return (
         <Layout>
-            {/*TODO: Pull to refresh accounts and transactions*/}
-            <ScrollView showsVerticalScrollIndicator={false} bounces={false} refreshControl={
-                <RefreshControl refreshing={isLoading} onRefresh={() => setRefreshKey((prevKey) => prevKey + 1)}/>}>
-                <YStack justifyContent={"flex-start"} flex={1}>
+            <YStack justifyContent={"flex-start"} flex={1}>
+                <ScrollView showsVerticalScrollIndicator={false} bounces={false} refreshControl={
+                    <RefreshControl refreshing={isLoading} onRefresh={() => setRefreshKey((prevKey) => prevKey + 1)}/>}>
                     <Spacer size={"$5"}/>
                     <XStack justifyContent={"space-between"} alignItems={"center"}>
                         <Logo/>
@@ -124,8 +126,18 @@ export default function Home() {
                             <Spacer/>
                         </Fragment>
                     ))}
-                </YStack>
-            </ScrollView>
+                </ScrollView>
+                <Spacer size={"$3"}/>
+                <XStack>
+                    <Link href={"/home"} asChild>
+                        <MainButton text={"Plătește"} flexSize={0.5}/>
+                    </Link>
+                    <Spacer size={"$3"}/>
+                    <Link href={"/home"} asChild>
+                        <SecondaryButton text={"Primește"} flexSize={0.5}/>
+                    </Link>
+                </XStack>
+            </YStack>
         </Layout>
     );
 }

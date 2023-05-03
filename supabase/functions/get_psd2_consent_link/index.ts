@@ -1,36 +1,8 @@
 import {serve} from "https://deno.land/std@0.168.0/http/server.ts"
-import {createClient, SupabaseClient} from "https://esm.sh/@supabase/supabase-js@2.21.0"
 
 serve(async (req) => {
     const secretId = Deno.env.get("NORDIGEN_SECRET_ID");
     const secretKey = Deno.env.get("NORDIGEN_SECRET_KEY");
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-
-    /*TODO: Handle the case when user creates another requisition before the previous one is finished*/
-    // Get the user from the authorization header that is a JWT token
-    const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey, {
-        global:
-            {
-                headers: {
-                    Authorization: req.headers.get("Authorization")!,
-                }
-            }
-    });
-    // Decode the JWT token to get the user data
-    const {data: user_data, error} = await supabase.auth.getUser();
-    if (error) {
-        return new Response(
-            JSON.stringify({error: "Invalid request: JWT missing or could not be decoded"}),
-            {
-                status: 400,
-                headers: {
-                    "content-type": "application/json; charset=UTF-8",
-                },
-            }
-        );
-    }
-    const userId = user_data!.user.id;
 
     // Get the Institution ID from the request body
     let institution_id: string;
@@ -81,15 +53,6 @@ serve(async (req) => {
     });
 
     const data = await response.json();
-    const requisitionId: string = data['id'];
-    // Save the requisition id in the database
-    await supabase.from('psd2_requisitions').insert([
-        {
-            requisition_id: requisitionId,
-            initiated_by: userId,
-        }
-    ]);
-
     // Return all the data to the client
     return new Response(JSON.stringify(data), {
         headers: {

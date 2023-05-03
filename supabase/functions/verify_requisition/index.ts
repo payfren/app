@@ -31,6 +31,23 @@ serve(async (req) => {
     }
     const userID = user_data.user.id;
 
+    // Get Consent ID from the request body
+    let consent_id: string;
+    try {
+        const json = await req.json();
+        consent_id = json.consent_id;
+    } catch (_) {
+        return new Response(
+            JSON.stringify({error: "Invalid request: consent_id is missing"}),
+            {
+                status: 400,
+                headers: {
+                    "content-type": "application/json; charset=UTF-8",
+                },
+            }
+        );
+    }
+
     const tokenResponse = await fetch("https://ob.nordigen.com/api/v2/token/new/", {
         method: "POST",
         headers: {
@@ -46,26 +63,7 @@ serve(async (req) => {
     const tokenData = await tokenResponse.json();
     const authToken = tokenData['access'];
 
-    const lastRequisition = await supabase.from('psd2_requisitions')
-        .select('requisition_id')
-        .eq('initiated_by', userID)
-        .order('created_at', {ascending: false})
-        .limit(1);
-
-    if (lastRequisition.data?.length === 0) {
-        return new Response(
-            JSON.stringify({message: "No requisition found"}),
-            {
-                status: 200,
-                headers: {
-                    "content-type": "application/json; charset=UTF-8",
-                },
-            }
-        );
-    }
-
-    const requisitionId: string = (lastRequisition.data as Array<{ requisition_id: string }>)[0]['requisition_id'];
-    const requisitionStatus = await fetch(`https://ob.nordigen.com/api/v2/requisitions/${requisitionId}/`, {
+    const requisitionStatus = await fetch(`https://ob.nordigen.com/api/v2/requisitions/${consent_id}/`, {
         method: "GET",
         headers: {
             "Accept": "application/json",
@@ -74,34 +72,17 @@ serve(async (req) => {
     });
 
     const requisitionStatusData = await requisitionStatus.json();
-    const status = requisitionStatusData['status'];
-    if (status !== 'LN') {
-        // User did not complete the requisition, so we can delete the requisition
-        // Delete from Nordigen API
-        await fetch(`https://ob.nordigen.com/api/v2/requisitions/${requisitionId}/`, {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${authToken}`,
-            }
-        });
-    } else {
-        const requisitionAccounts = requisitionStatusData['accounts'];
-        // Add Nordigen account IDs to database
-        for (const account of requisitionAccounts) {
-            await supabase.from('bank_accounts')
-                .insert([
-                    {
-                        owned_by: userID,
-                        nordigen_account_id: account,
-                    }
-                ]);
-        }
+    const requisitionAccounts = requisitionStatusData['accounts'];
+    // Add Nordigen account IDs to database
+    for (const account of requisitionAccounts) {
+        await supabase.from('bank_accounts')
+            .insert([
+                {
+                    owned_by: userID,
+                    nordigen_account_id: account,
+                }
+            ]);
     }
-    // Delete requisition from database
-    await supabase.from('psd2_requisitions')
-        .delete()
-        .eq('requisition_id', requisitionId);
 
     return new Response(
         JSON.stringify(
