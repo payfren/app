@@ -8,7 +8,6 @@ const fetchUserBankAccounts = async () => {
     if (accountsError) {
         throw new Error(accountsError.message);
     }
-    console.log(data)
     const {error: refreshError} = await supabase.functions.invoke('get_accounts_data', {
         body :
             {
@@ -18,7 +17,6 @@ const fetchUserBankAccounts = async () => {
     if (refreshError) {
         throw new Error(refreshError.message);
     }
-
     const {data: bankAccounts, error} = await supabase
         .from('bank_accounts')
         .select('*')
@@ -29,6 +27,6 @@ const fetchUserBankAccounts = async () => {
     return bankAccounts;
 };
 
-export default function getUserBankAccounts(refreshKey: number) {
-    return useQuery({queryKey: ['bankAccounts', refreshKey], queryFn: fetchUserBankAccounts, refetchOnMount: true, refetchInterval: 10000});
+export default function getUserBankAccounts() {
+    return useQuery({queryKey: ['bankAccounts'], queryFn: fetchUserBankAccounts, refetchOnMount: true, refetchInterval: 10000, networkMode: 'online'});
 }

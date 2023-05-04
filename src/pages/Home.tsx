@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useState} from 'react';
 import {RefreshControl, ScrollView} from "react-native";
 import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
@@ -12,6 +12,7 @@ import AppLoading from "./AppLoading";
 import getUserBankAccounts from "../serverStore/getUserBankAccounts";
 import TransactionDetails from "../components/TransactionDetails";
 import SecondaryButton from "../components/SecondaryButton";
+import useUserProfile from "../serverStore/getUserProfile";
 
 const transactions = [
     {
@@ -39,19 +40,11 @@ const transactions = [
 
 
 export default function Home() {
-    const [user, setUser] = useState(null);
-    const [refreshKey, setRefreshKey] = useState(0);
-    const {data: bankAccounts, isLoading} = getUserBankAccounts(refreshKey);
+    const [refreshing, setRefreshing] = useState(false);
+    const {data: user, isLoading: isLoadingProfile} = useUserProfile();
+    const {data: bankAccounts, isLoading: isLoadingBankAccounts, refetch: refetchBankAccounts} = getUserBankAccounts();
     const {finished_consent_flow, ref} = useSearchParams();
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const currentUser = await supabase.auth.getSession();
-            setUser(currentUser.data.session.user);
-        };
-        fetchUser();
-    }, []);
 
     const handleRedirectFromConsent = async (consentRef) => {
         const {error} = await supabase.functions.invoke('verify_requisition', {
@@ -64,14 +57,22 @@ export default function Home() {
         }
     };
 
+    const reloadBankAccounts = () => {
+        setRefreshing(true);
+        refetchBankAccounts().then(() => {
+            setRefreshing(false);
+        });
+    }
+
+    // TODO: Refreshing doesn't work quite well, first there is a blank bank account box and then the data is loaded
     if (finished_consent_flow === 'true') {
         handleRedirectFromConsent(ref).then(() => {
-            setRefreshKey((prevKey) => prevKey + 1);
+            reloadBankAccounts()
         });
         router.replace('/home');
     }
 
-    if (!user) {
+    if (isLoadingProfile) {
         return (
             <AppLoading/>
         );
@@ -81,16 +82,16 @@ export default function Home() {
         <Layout>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={false} refreshControl={
-                    <RefreshControl refreshing={isLoading} onRefresh={() => setRefreshKey((prevKey) => prevKey + 1)}/>}>
+                    <RefreshControl refreshing={refreshing || isLoadingBankAccounts} onRefresh={reloadBankAccounts}/>}>
                     <Spacer size={"$5"}/>
                     <XStack justifyContent={"space-between"} alignItems={"center"}>
                         <Logo/>
-                        <Link href={"/home/settings"} asChild>
+                        <Link href={"/home/profile"} asChild>
                             <Button borderRadius={100} icon={User} height={60} width={60}/>
                         </Link>
                     </XStack>
                     <Spacer size={"$5"}/>
-                    <H3>Bine ai venit, {user.user_metadata.given_name}!</H3>
+                    <H3>Bine ai venit, {user.given_name}!</H3>
                     <Paragraph>Lista conturilor tale:</Paragraph>
                     <Spacer size={"$2"}/>
                     {bankAccounts?.map((account, index) => (

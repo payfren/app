@@ -7,6 +7,7 @@ import {useStoreHandlers} from "../lib/useStoreHandlers";
 import {useFocusEffect, useRouter, useSearchParams} from "expo-router";
 import Logo from "../components/Logo";
 import verifyOTPCode from "../lib/verifyOTPCode";
+import createUserProfile from "../lib/createUserProfile";
 
 export default function VerifyOTP() {
     const router = useRouter();
@@ -23,7 +24,16 @@ export default function VerifyOTP() {
             await verifyOTPCode(otpCode, phoneNumber)
                 .then(async (response) => {
                     if (response) {
-                        router.push({pathname: "/home"});
+                        // After we have obtained a valid session for the new user, we can create their profile
+                        if (from === 'signup') {
+                            createUserProfile().then(() => {
+                                // TODO: Empty the signup store
+                                router.push({pathname: "/home"});
+                            });
+                        } else {
+                            // TODO: Empty the login store
+                            router.push({pathname: "/home"});
+                        }
                     }
                 });
         }

@@ -108,7 +108,6 @@ serve(async (req) => {
 
         if (accountAlreadyInitialized)
         {
-            console.log(`Updating data for account ${accountId}`);
             const {error} = await supabase.from('bank_accounts').upsert({
                 owned_by: account.owned_by,
                 nordigen_account_id: account.nordigen_account_id,
@@ -162,7 +161,6 @@ serve(async (req) => {
         account.bank_name = bankData['name'];
         account.bank_logo = bankData['logo'];
 
-        console.log(account);
         const {error} = await supabase.from('bank_accounts').upsert([account], {onConflict: 'nordigen_account_id'});
         if (error) {
             return new Response(

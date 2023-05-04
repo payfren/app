@@ -5,9 +5,9 @@
     "slug": "app",
     "icon": "./assets/icon.png",
     "splash": {
-        "image": "./assets/splash.png",
-        "resizeMode": "cover",
-        "backgroundColor": "#FCFCFC"
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FCFCFC"
     },
     "android": {
       "package": "com.payfren.app",
@@ -27,7 +27,13 @@
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "plugins": [
-      "expo-dev-client"
+      "expo-dev-client",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
     "extra": {
       "eas": {

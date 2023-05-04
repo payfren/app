@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query";
-import supabase from "../lib/supabase.ts";
+import supabase from "../lib/supabase";
 
 const fetchAvailableBanks = async () => {
     const {data, error} = await supabase.functions.invoke('available_banks');
