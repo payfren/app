@@ -7512,6 +7512,13 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-custom-qr-codes-expo@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-custom-qr-codes-expo/-/react-native-custom-qr-codes-expo-2.2.0.tgz#0286713160d9db13c82718ba3c4786ac7dfeb076"
+  integrity sha512-NWZqkdyZfdYlZcCqejshWRJJik7MVl+9r8AvsPPRxXsKfdEaqalQ2sb78Zyh3BELnyqr3ptP7CSxjtXiN77SjA==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-dotenv@^3.4.8:
   version "3.4.8"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.8.tgz#42284070a9994076cd700805c2dd28051c9e1432"

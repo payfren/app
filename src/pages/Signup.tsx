@@ -52,7 +52,6 @@ export default function Signup() {
         try {
             const response = await createNewUser(phoneNumber, givenName, familyName);
             if (response) {
-                console.log("Sent OTP!");
                 router.push({pathname: "/verify-otp", params: {from: "signup"}});
             } else {
                 console.log("Failed to create user!");

@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import {RefreshControl, ScrollView} from "react-native";
-import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
+import {Button, H3, Paragraph, Sheet, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
 import Logo from "../components/Logo";
-import {User} from "@tamagui/lucide-icons";
+import {ChevronDown, QrCode, User} from "@tamagui/lucide-icons";
 import {Link, useRouter, useSearchParams} from "expo-router";
 import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
@@ -13,6 +13,8 @@ import getUserBankAccounts from "../serverStore/getUserBankAccounts";
 import TransactionDetails from "../components/TransactionDetails";
 import SecondaryButton from "../components/SecondaryButton";
 import useUserProfile from "../serverStore/getUserProfile";
+import ReceiveMoney from "./ReceiveMoney";
+import SendMoney from "./SendMoney";
 
 const transactions = [
     {
@@ -46,6 +48,8 @@ export default function Home() {
     const {finished_consent_flow, ref} = useSearchParams();
     const router = useRouter();
 
+    const [openReceiveMoney, setOpenReceiveMoney] = useState(false)
+    const [openSendMoney, setOpenSendMoney] = useState(false)
     const handleRedirectFromConsent = async (consentRef) => {
         const {error} = await supabase.functions.invoke('verify_requisition', {
             body: {
@@ -64,7 +68,6 @@ export default function Home() {
         });
     }
 
-    // TODO: Refreshing doesn't work quite well, first there is a blank bank account box and then the data is loaded
     if (finished_consent_flow === 'true') {
         handleRedirectFromConsent(ref).then(() => {
             reloadBankAccounts()
@@ -130,15 +133,13 @@ export default function Home() {
                 </ScrollView>
                 <Spacer size={"$3"}/>
                 <XStack>
-                    <Link href={"/home"} asChild>
-                        <MainButton text={"Plătește"} flexSize={0.5}/>
-                    </Link>
+                    <MainButton text={"Plătește"} flexSize={0.5} onPress={() => setOpenSendMoney(true)}/>
                     <Spacer size={"$3"}/>
-                    <Link href={"/home"} asChild>
-                        <SecondaryButton text={"Primește"} flexSize={0.5}/>
-                    </Link>
+                    <SecondaryButton text={"Primește"} flexSize={0.5} onPress={() => setOpenReceiveMoney(true)}/>
                 </XStack>
             </YStack>
+            <SendMoney open={openSendMoney} setOpen={setOpenSendMoney}/>
+            <ReceiveMoney open={openReceiveMoney} setOpen={setOpenReceiveMoney}/>
         </Layout>
     );
 }

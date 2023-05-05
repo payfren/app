@@ -32,13 +32,14 @@ export default function Profile() {
             }
             const {error: previousPhotoError} = await supabase.storage
                 .from('profile_photos')
-                .remove([`public/${user.user_id}/profile-photo`]);
+                .remove([`public/${user.user_id}`]);
             if (previousPhotoError) {
                 console.error('Error removing previous profile photo:', previousPhotoError);
             }
             // Upload the selected image to Supabase storage bucket
             const base64Image = result.assets[0].base64;
-            const uploadPath = `public/${user.user_id}/profile-photo`;
+            const randomUUID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const uploadPath = `public/${user.user_id}/${randomUUID}`;
             const imageType = result.assets[0].uri.split('.').pop();
             const {error} = await supabase
                 .storage
@@ -87,8 +88,6 @@ export default function Profile() {
                             <Avatar.Fallback bc="$gray5"/>
                         </Avatar>
                     </XStack>
-                    <Spacer size={"$1"}/>
-                    <Paragraph textAlign={"center"} color={"gray"}>Apasă pentru a modifica poza</Paragraph>
                     <Spacer size={"$5"}/>
                     <XStack alignItems="center" space="$4">
                         <Label width={90} htmlFor="given_name">

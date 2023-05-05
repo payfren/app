@@ -28,7 +28,6 @@ export default function Login() {
         try {
             const response = await authenticateUser(phoneNumber);
             if (response) {
-                console.log("Sent OTP!");
                 router.push({pathname: "/verify-otp", params: {from: "login"}});
             } else
                 console.log("Failed to authenticate user!");
