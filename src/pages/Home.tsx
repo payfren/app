@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import {RefreshControl, ScrollView} from "react-native";
-import {Button, H3, Paragraph, Sheet, Spacer, Spinner, XStack, YStack} from 'tamagui';
+import {Button, H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
 import Layout from '../../src/components/Layout';
 import supabase from '../lib/supabase';
 import Logo from "../components/Logo";
-import {ChevronDown, QrCode, User} from "@tamagui/lucide-icons";
+import {User} from "@tamagui/lucide-icons";
 import {Link, useRouter, useSearchParams} from "expo-router";
 import AccountDetails from "../components/AccountDetails";
 import MainButton from "../components/MainButton";
@@ -13,8 +13,6 @@ import getUserBankAccounts from "../serverStore/getUserBankAccounts";
 import TransactionDetails from "../components/TransactionDetails";
 import SecondaryButton from "../components/SecondaryButton";
 import useUserProfile from "../serverStore/getUserProfile";
-import ReceiveMoney from "./ReceiveMoney";
-import SendMoney from "./SendMoney";
 
 const transactions = [
     {
@@ -48,8 +46,6 @@ export default function Home() {
     const {finished_consent_flow, ref} = useSearchParams();
     const router = useRouter();
 
-    const [openReceiveMoney, setOpenReceiveMoney] = useState(false)
-    const [openSendMoney, setOpenSendMoney] = useState(false)
     const handleRedirectFromConsent = async (consentRef) => {
         const {error} = await supabase.functions.invoke('verify_requisition', {
             body: {
@@ -97,22 +93,23 @@ export default function Home() {
                     <H3>Bine ai venit, {user.given_name}!</H3>
                     <Paragraph>Lista conturilor tale:</Paragraph>
                     <Spacer size={"$2"}/>
-                    {bankAccounts?.map((account, index) => (
-                        <Fragment key={index}>
-                            <AccountDetails
-                                bankLogo={account.bank_logo}
-                                bankBalance={account.balance}
-                                bankCurrency={account.currency}
-                                bankIBAN={account.iban}
-                                bankName={account.bank_name}
-                            />
-                            <Spacer/>
+                    {isLoadingBankAccounts ? <Fragment>
+                            <Spacer size={"$3"}/>
+                            <Spinner color={"$color"}/>
+                            <Spacer size={"$5"}/>
                         </Fragment>
-                    )) ?? <Fragment>
-                        <Spacer size={"$3"}/>
-                        <Spinner color={"$color"}/>
-                        <Spacer size={"$5"}/>
-                    </Fragment>}
+                        : bankAccounts?.map((account, index) => (
+                            <Fragment key={index}>
+                                <AccountDetails
+                                    bankLogo={account.bank_logo}
+                                    bankBalance={account.balance}
+                                    bankCurrency={account.currency}
+                                    bankIBAN={account.iban}
+                                    bankName={account.bank_name}
+                                />
+                                <Spacer/>
+                            </Fragment>)
+                        )}
                     <Link href={"/home/add-account"} asChild>
                         <MainButton text={"Adaugă cont"}/>
                     </Link>
@@ -133,13 +130,15 @@ export default function Home() {
                 </ScrollView>
                 <Spacer size={"$3"}/>
                 <XStack>
-                    <MainButton text={"Plătește"} flexSize={0.5} onPress={() => setOpenSendMoney(true)}/>
+                    <Link href={"/home/pay"} asChild>
+                        <MainButton text={"Plătește"} flexSize={0.5}/>
+                    </Link>
                     <Spacer size={"$3"}/>
-                    <SecondaryButton text={"Primește"} flexSize={0.5} onPress={() => setOpenReceiveMoney(true)}/>
+                    <Link href={"/home/receive-money"} asChild>
+                        <SecondaryButton text={"Primește"} flexSize={0.5}/>
+                    </Link>
                 </XStack>
             </YStack>
-            <SendMoney open={openSendMoney} setOpen={setOpenSendMoney}/>
-            <ReceiveMoney open={openReceiveMoney} setOpen={setOpenReceiveMoney}/>
         </Layout>
     );
 }

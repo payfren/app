@@ -25,17 +25,11 @@ export default function Profile() {
             base64: true,
         });
         if (!result.canceled) {
-            // Delete the user's previous profile photo from Supabase storage bucket
             if (result.assets[0].type.toString() !== 'image') {
                 console.error('Error uploading image: Invalid file type');
                 return;
             }
-            const {error: previousPhotoError} = await supabase.storage
-                .from('profile_photos')
-                .remove([`public/${user.user_id}`]);
-            if (previousPhotoError) {
-                console.error('Error removing previous profile photo:', previousPhotoError);
-            }
+            // TODO: Delete the user's previous profile photo from Supabase storage bucket
             // Upload the selected image to Supabase storage bucket
             const base64Image = result.assets[0].base64;
             const randomUUID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);

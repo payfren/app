@@ -1,38 +1,56 @@
-import {H3, Paragraph, Sheet, Spacer, Spinner} from "tamagui";
-import {useState} from "react";
-import useUserProfile from "../serverStore/getUserProfile";
+import React, { useState, useEffect } from 'react';
+import {H3, Paragraph, Spacer, Spinner, XStack, YStack} from 'tamagui';
+import useUserProfile from '../serverStore/getUserProfile';
 import { QRCode } from 'react-native-custom-qr-codes-expo';
+import { useColorScheme } from 'react-native';
+import Layout from '../components/Layout';
+import Logo from "../components/Logo";
 
-export default function ReceiveMoney({open, setOpen}) {
-    const [position, setPosition] = useState(0);
-    const {data, isLoading} = useUserProfile();
-    const logo = require("../../assets/icon.png");
+export default function ReceiveMoney() {
+    const { data: user, isLoading: isLoadingProfile } = useUserProfile();
+    const [qrCodeReady, setQrCodeReady] = useState(false);
+
+    const logo = require('../../assets/icon.png');
+    const colorScheme = useColorScheme();
+    const paymentLink = `payfren://home/pay/${user.user_id}`;
+
+    useEffect(() => {
+        if (!isLoadingProfile) {
+            // Simulate async QR code generation
+            setTimeout(() => {
+                setQrCodeReady(true);
+            }, 500);
+        }
+    }, [isLoadingProfile]);
 
     return (
-        <Sheet
-            forceRemoveScrollEnabled={open}
-            open={open}
-            onOpenChange={setOpen}
-            snapPoints={[80,]}
-            dismissOnSnapToBottom
-            position={position}
-            onPositionChange={setPosition}
-            zIndex={100_000}
-            animation="bouncy"
-        >
-            <Sheet.Overlay/>
-            <Sheet.Handle/>
-            <Sheet.Frame
-                flex={1}
-                padding="$4"
-                justifyContent="center"
-                alignItems="center"
-            >
+        <Layout>
+            <YStack flex={1} justifyContent={'center'} alignItems={'center'}>
+                <XStack>
+                    <Logo />
+                </XStack>
                 <H3>Primește bani</H3>
-                <Paragraph textAlign={"center"}>Folosește codul tău sau numârul de telefon pentru a primi bani</Paragraph>
-                <Spacer/>
-                {isLoading ? <Spinner color={"$color"}/> : <QRCode content={data?.phone_number} logo={logo}/>}
-            </Sheet.Frame>
-        </Sheet>
+                <Paragraph textAlign={'center'}>
+                    Folosește codul tău sau numărul de telefon asociat contului pentru a primi bani
+                </Paragraph>
+                <Spacer />
+                {isLoadingProfile || !qrCodeReady ? (
+                    <Spinner color={'$color'} />
+                ) : (
+                    <QRCode
+                        content={paymentLink}
+                        color={colorScheme === 'light' ? 'black' : 'white'}
+                        logo={logo}
+                        logoSize={70}
+                        ecl={'H'}
+                    />
+                )}
+                <Spacer />
+                <Paragraph textAlign={'center'}>
+                    Numărul tău este:{' '}
+                    <Paragraph fontWeight={'bold'}>{user.phone_number}</Paragraph>
+                </Paragraph>
+            </YStack>
+        </Layout>
     );
 }

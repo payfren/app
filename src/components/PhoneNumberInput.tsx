@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {Input, Paragraph, Spacer, YStack} from 'tamagui';
+import {Input, Paragraph, Spacer, XStack, YStack} from 'tamagui';
 
-export default function PhoneNumberInput({getPhoneNumber, setPhoneNumber}) {
+export default function PhoneNumberInput({getPhoneNumber, setPhoneNumber, maxWidth} : {getPhoneNumber: () => string, setPhoneNumber: (phoneNumber: string) => void, maxWidth?: number}) {
     const [inputValue, setInputValue] = useState(getPhoneNumber());
 
-    {/*TODO: Rewrite this function to make it cleaner*/}
+    {/*TODO: Rewrite this function to make it cleaner*/
+    }
     const handlePhoneNumberChange = (text: string) => {
         let formattedPhoneNumber = text.replace(/[^\d+]/g, '');
         if (formattedPhoneNumber.length <= 2) {
@@ -47,13 +48,15 @@ export default function PhoneNumberInput({getPhoneNumber, setPhoneNumber}) {
         <YStack>
             <Paragraph>Număr de telefon</Paragraph>
             <Spacer size={'$2'}/>
-            <Input
-                cursorColor={'orange'}
-                keyboardType="phone-pad"
-                maxLength={15}
-                onChangeText={handlePhoneNumberChange}
-                value={inputValue}
-            />
+            <XStack maxWidth={maxWidth}>
+                <Input width={"100%"}
+                       cursorColor={'orange'}
+                       keyboardType={'phone-pad'}
+                       maxLength={15}
+                       onChangeText={handlePhoneNumberChange}
+                       value={inputValue}
+                />
+            </XStack>
         </YStack>
     );
 }

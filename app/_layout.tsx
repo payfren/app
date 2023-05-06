@@ -1,4 +1,4 @@
-import {Slot, SplashScreen, usePathname} from "expo-router";
+import {Slot, SplashScreen} from "expo-router";
 import {useFonts} from "expo-font";
 import {Fragment, useEffect, useState} from "react";
 import {Platform, useColorScheme} from "react-native";
@@ -8,6 +8,7 @@ import {StatusBar} from "expo-status-bar";
 import appConfig from "../tamagui.config";
 import {AuthProvider} from "../src/context/AuthProvider";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {ToastProvider} from "@tamagui/toast";
 
 const queryClient = new QueryClient();
 export default function Layout() {
@@ -53,8 +54,10 @@ export default function Layout() {
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
                     <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
-                        <StatusBar translucent={true} style={"auto"}/>
-                        <Slot/>
+                        <ToastProvider>
+                            <StatusBar translucent={true} style={"auto"}/>
+                            <Slot/>
+                        </ToastProvider>
                     </TamaguiProvider>
                 </AuthProvider>
             </QueryClientProvider>

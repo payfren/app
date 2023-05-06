@@ -1,9 +1,9 @@
-import Layout from "../components/Layout.tsx";
+import Layout from "../components/Layout";
 import {H2, Paragraph, Spacer, Spinner, YStack} from "tamagui";
-import Logo from "../components/Logo.tsx";
+import Logo from "../components/Logo";
 import {ScrollView} from "react-native";
-import useAvailableBanks from "../serverStore/getAvailableBanks.ts";
-import AddBankButton from "../components/AddBankButton.tsx";
+import useAvailableBanks from "../serverStore/getAvailableBanks";
+import AddBankButton from "../components/AddBankButton";
 import {Fragment} from "react";
 
 export default function AddAccount() {

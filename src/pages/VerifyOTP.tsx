@@ -8,6 +8,8 @@ import {useFocusEffect, useRouter, useSearchParams} from "expo-router";
 import Logo from "../components/Logo";
 import verifyOTPCode from "../lib/verifyOTPCode";
 import createUserProfile from "../lib/createUserProfile";
+import cleanLoginStore from "../lib/cleanLoginStore";
+import cleanSignUpStore from "../lib/cleanSignUpStore";
 
 export default function VerifyOTP() {
     const router = useRouter();
@@ -27,11 +29,11 @@ export default function VerifyOTP() {
                         // After we have obtained a valid session for the new user, we can create their profile
                         if (from === 'signup') {
                             createUserProfile().then(() => {
-                                // TODO: Empty the signup store
+                                cleanSignUpStore();
                                 router.push({pathname: "/home"});
                             });
                         } else {
-                            // TODO: Empty the login store
+                            cleanLoginStore();
                             router.push({pathname: "/home"});
                         }
                     }

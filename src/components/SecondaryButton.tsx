@@ -5,16 +5,18 @@ interface SecondaryButtonProps {
     text: string;
     flexSize?: number;
     onPress?: () => void;
+    maxWidth?: number;
 }
 
 const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps>(
-    ({text, flexSize, onPress}, ref) => {
+    ({text, flexSize, onPress, maxWidth}, ref) => {
         return (
             <Button
                 theme={"gray"}
                 flex={flexSize}
                 onPress={onPress}
                 ref={ref}
+                maxWidth={maxWidth}
             >
                 {text}
             </Button>

@@ -6,9 +6,10 @@ interface MainButtonProps {
     flexSize?: number;
     onPress?: () => void;
     icon?: JSX.Element;
+    maxWidth?: number;
 }
 
-const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(({text, flexSize, onPress, icon}, ref) => {
+const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(({text, flexSize, onPress, icon, maxWidth}, ref) => {
     return (
         <Button
             ref={ref}
@@ -16,6 +17,7 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(({text, 
             theme={"orange"}
             onPress={onPress}
             icon={icon}
+            maxWidth={maxWidth}
         >
             {text}
         </Button>
