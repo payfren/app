@@ -64,6 +64,9 @@ export default function Signup() {
             setStatus('off');
             return;
         }
+        // Remove spaces from end of names
+        setGivenName(givenName.trim());
+        setFamilyName(familyName.trim());
         // If everything is valid, create a new user
         try {
             const response = await createNewUser(phoneNumber, givenName, familyName);
