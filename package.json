@@ -2,6 +2,7 @@
   "name": "payfren",
   "private": true,
   "dependencies": {
+    "@react-native-community/netinfo": "9.3.7",
     "@supabase/supabase-js": "^2.21.0",
     "@tamagui/animations-react-native": "^1.17.0",
     "@tamagui/config": "^1.17.0",
