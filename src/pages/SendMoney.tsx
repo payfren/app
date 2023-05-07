@@ -63,7 +63,8 @@ export default function SendMoney() {
                 haptic: "error"
             }
         })
-        setShowToast(true)
+        if (!showToast)
+            setShowToast(true)
     }
 
     const handlePhoneNumberRedirect = async () => {

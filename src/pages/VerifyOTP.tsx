@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import {Form, FormTrigger, H2, Paragraph, Spacer, Spinner, YStack} from "tamagui";
 import MainButton from "../components/MainButton";
-import {useCallback, useState} from "react";
+import React, {useCallback, useState} from "react";
 import OTPInput from "../components/OTPInput";
 import {useStoreHandlers} from "../lib/useStoreHandlers";
 import {useFocusEffect, useRouter, useSearchParams} from "expo-router";
@@ -10,13 +10,27 @@ import verifyOTPCode from "../lib/verifyOTPCode";
 import createUserProfile from "../lib/createUserProfile";
 import cleanLoginStore from "../lib/cleanLoginStore";
 import cleanSignUpStore from "../lib/cleanSignUpStore";
+import CustomToast from "../components/CustomToast";
+import {ToastViewport, useToastController} from "@tamagui/toast";
 
 export default function VerifyOTP() {
     const router = useRouter();
     const {from} = useSearchParams();
     const {setOTPCode, getOTPCode, getPhoneNumber} = useStoreHandlers(from);
     const [status, setStatus] = useState<'off' | 'processing'>('off');
-
+    const [showToast, setShowToast] = useState(false);
+    const toast = useToastController();
+    const showErrorToast = (message) => {
+        toast.show('Eroare', {
+            message: message,
+            duration: 2000,
+            burntOptions: {
+                haptic: "error"
+            }
+        })
+        if (!showToast)
+            setShowToast(true)
+    }
     const handleOTPSubmit = async () => {
         setStatus('processing');
         const otpCode = getOTPCode();
@@ -39,6 +53,9 @@ export default function VerifyOTP() {
                     }
                 });
         }
+        else {
+            showErrorToast("Codul introdus nu este valid!");
+        }
         setStatus('off');
     };
 
@@ -53,6 +70,8 @@ export default function VerifyOTP() {
 
     return (
         <Layout>
+            <CustomToast showToast={showToast}/>
+            <ToastViewport alignSelf={"center"} marginTop={"$7"}/>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <Spacer size={"$5"}/>
                 <Logo/>

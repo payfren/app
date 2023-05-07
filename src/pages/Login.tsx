@@ -5,8 +5,10 @@ import {useRouter} from "expo-router";
 import MainButton from "../components/MainButton";
 import {useSignInStore} from "../clientStore/SignInStore";
 import Logo from "../components/Logo";
-import {useState} from "react";
+import React, {useState} from "react";
 import authenticateUser from "../lib/authenticateUser";
+import CustomToast from "../components/CustomToast";
+import {ToastViewport, useToastController} from "@tamagui/toast";
 
 
 export default function Login() {
@@ -16,12 +18,25 @@ export default function Login() {
     }));
     const router = useRouter();
     const [status, setStatus] = useState<'off' | 'processing'>('off');
+    const [showToast, setShowToast] = useState(false);
+    const toast = useToastController();
+    const showErrorToast = (message) => {
+        toast.show('Eroare', {
+            message: message,
+            duration: 2000,
+            burntOptions: {
+                haptic: "error"
+            }
+        })
+        if (!showToast)
+            setShowToast(true)
+    }
 
     const handleFormSubmit = async () => {
         setStatus('processing');
         const phoneNumber = getPhoneNumber();
         if (!phoneNumber || phoneNumber.length !== 15) {
-            console.log("Invalid phone number!");
+            showErrorToast("Numărul de telefon nu este valid!");
             setStatus('off');
             return;
         }
@@ -30,7 +45,7 @@ export default function Login() {
             if (response) {
                 router.push({pathname: "/verify-otp", params: {from: "login"}});
             } else
-                console.log("Failed to authenticate user!");
+                showErrorToast("Nu există un cont asociat cu acest număr!");
         } finally {
             setStatus('off');
         }
@@ -38,6 +53,8 @@ export default function Login() {
 
     return (
         <Layout>
+            <CustomToast showToast={showToast}/>
+            <ToastViewport alignSelf={"center"} marginTop={"$7"}/>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <Spacer size={"$5"}/>
                 <Logo/>

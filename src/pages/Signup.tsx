@@ -1,4 +1,4 @@
-import {Form, FormTrigger, H2, Paragraph, Spacer, YStack, Spinner} from "tamagui";
+import {Form, FormTrigger, H2, Paragraph, Spacer, Spinner, YStack} from "tamagui";
 import Layout from "../components/Layout";
 import ExtendedInput from "../components/ExtendedInput";
 import MainButton from "../components/MainButton";
@@ -7,7 +7,9 @@ import {useRouter} from "expo-router";
 import PhoneNumberInput from "../components/PhoneNumberInput";
 import Logo from "../components/Logo";
 import createNewUser from "../lib/createNewUser";
-import {useState} from "react";
+import React, {useState} from "react";
+import {ToastViewport, useToastController} from "@tamagui/toast";
+import CustomToast from "../components/CustomToast";
 
 export default function Signup() {
     const {
@@ -27,6 +29,20 @@ export default function Signup() {
     }));
     const router = useRouter();
     const [status, setStatus] = useState<'off' | 'processing'>('off')
+    const [showToast, setShowToast] = useState(false);
+    const toast = useToastController();
+
+    const showErrorToast = (message) => {
+        toast.show('Eroare', {
+            message: message,
+            duration: 2000,
+            burntOptions: {
+                haptic: "error"
+            }
+        })
+        if (!showToast)
+            setShowToast(true)
+    }
 
     const handleFormSubmit = async () => {
         setStatus('processing');
@@ -34,17 +50,17 @@ export default function Signup() {
         const givenName = getGivenName();
         const familyName = getFamilyName();
         if (!phoneNumber || phoneNumber.length !== 15) {
-            console.log("Invalid phone number!");
+            showErrorToast("Numărul de telefon nu este valid!");
             setStatus('off');
             return;
         }
         if (!givenName || givenName.length < 3) {
-            console.log("Invalid given name!");
+            showErrorToast("Prenumele nu este valid!")
             setStatus('off');
             return;
         }
         if (!familyName || familyName.length < 3) {
-            console.log("Invalid family name!");
+            showErrorToast("Numele nu este valid!")
             setStatus('off');
             return;
         }
@@ -54,10 +70,9 @@ export default function Signup() {
             if (response) {
                 router.push({pathname: "/verify-otp", params: {from: "signup"}});
             } else {
-                console.log("Failed to create user!");
+                showErrorToast("A apărut o eroare la crearea contului!");
             }
-        }
-        finally {
+        } finally {
             setStatus('off');
         }
     };
@@ -65,6 +80,8 @@ export default function Signup() {
 
     return (
         <Layout>
+            <CustomToast showToast={showToast}/>
+            <ToastViewport alignSelf={"center"} marginTop={"$7"}/>
             <YStack justifyContent={"flex-start"} flex={1}>
                 <Spacer size={"$5"}/>
                 <Logo/>
