@@ -19,10 +19,10 @@ function useProtectedRoute(user, isLoading, isOffline) {
             } else {
                 const inAuthGroup = segments[0] === '(auth)';
                 const onNetworkError = segments[0] === 'network-error';
-                if (!user && !inAuthGroup) {
-                    router.replace('/');
-                } else if (user && (inAuthGroup || onNetworkError)) {
+                if (user && (inAuthGroup || onNetworkError)) {
                     router.replace('/home');
+                } else if (!user && !inAuthGroup) {
+                    router.replace('/');
                 }
             }
         }
@@ -48,25 +48,21 @@ function useNetworkStatus() {
 
 function useAuthLogic(isOffline) {
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(!isOffline);
 
     const fetchSession = async () => {
-        setIsLoading(true);
-        if (isOffline) {
+        try {
+            if (isOffline) {
+                return;
+            }
+            setIsLoading(true);
+            const {data: session} = await supabase.auth.getUser();
+            setUser(session?.user);
+        } catch (error) {
+            console.error('Error fetching session:', error);
+        } finally {
             setIsLoading(false);
-            return;
         }
-        supabase.auth.getUser()
-            .then(({ data: session }) => {
-                setUser(session?.user);
-            })
-            .catch((error) => {
-                console.error('Error fetching session:', error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-        setIsLoading(false)
     };
 
     useEffect(() => {
@@ -93,21 +89,26 @@ function useAuthLogic(isOffline) {
         return () => {
             authListener?.subscription.unsubscribe();
         };
-    }, []);
+    }, [isOffline]);
 
-    return { user, isLoading };
+    return {user, isLoading};
 }
-
 
 
 export function AuthProvider(props) {
     const isOffline = useNetworkStatus();
-    const { user, isLoading } = useAuthLogic(isOffline);
+    const {user, isLoading} = useAuthLogic(isOffline);
     useProtectedRoute(user, isLoading, isOffline);
 
+    // Render children on every isLoading change (kind of hacky)
+    // I should come up with a better way to do this
+    useEffect(() => {
+        props.children;
+    }, [isLoading]);
+
     return (
-        <AuthContext.Provider value={user}>
-            {!isLoading && props.children}
+        <AuthContext.Provider value={{user, isLoading}}>
+            {props.children}
         </AuthContext.Provider>
     );
 }
