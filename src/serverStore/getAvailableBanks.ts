@@ -10,6 +10,6 @@ const fetchAvailableBanks = async () => {
 };
 
 export default function useAvailableBanks() {
-    return useQuery({queryKey: ['availableBanks'], queryFn: fetchAvailableBanks});
+    return useQuery({queryKey: ['availableBanks'], queryFn: fetchAvailableBanks, networkMode: 'online'});
 };
 

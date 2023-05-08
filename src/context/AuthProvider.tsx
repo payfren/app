@@ -29,10 +29,7 @@ function useProtectedRoute(user, isLoading, isOffline) {
     }, [user, segments, isLoading, isOffline, router]);
 }
 
-
-export function AuthProvider(props) {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+function useNetworkStatus() {
     const [isOffline, setOfflineStatus] = useState(false);
 
     useEffect(() => {
@@ -41,38 +38,47 @@ export function AuthProvider(props) {
             setOfflineStatus(offline);
         });
 
-        return () => removeNetInfoSubscription();
+        return () => {
+            removeNetInfoSubscription();
+        };
     }, []);
 
-    useProtectedRoute(user, isLoading, isOffline);
+    return isOffline;
+}
+
+function useAuthLogic(isOffline) {
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchSession = async () => {
+        setIsLoading(true);
+        if (isOffline) {
+            setIsLoading(false);
+            return;
+        }
+        supabase.auth.getUser()
+            .then(({ data: session }) => {
+                setUser(session?.user);
+            })
+            .catch((error) => {
+                console.error('Error fetching session:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+        setIsLoading(false)
+    };
 
     useEffect(() => {
-        const fetchSession = async () => {
-            setIsLoading(true);
-            supabase.auth.getSession()
-                .then(({data: session}) => {
-                    setUser(session?.session.user ?? null);
-                })
-                .catch((error) => {
-                    console.error('Error fetching session:', error);
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                });
-        };
-
-        const subscribeToAuthChanges = async () => {
+        const subscribeToAuthChanges = () => {
             supabase.auth.onAuthStateChange(async (event, session) => {
-                setUser(session?.user ?? null);
+                setUser(session?.user);
             });
         };
 
         const initializeAuth = async () => {
-            const [_, authListener] = await Promise.all([
-                fetchSession(),
-                subscribeToAuthChanges(),
-            ]);
-            return authListener;
+            await fetchSession();
+            return subscribeToAuthChanges();
         };
 
         let authListener;
@@ -88,6 +94,16 @@ export function AuthProvider(props) {
             authListener?.subscription.unsubscribe();
         };
     }, []);
+
+    return { user, isLoading };
+}
+
+
+
+export function AuthProvider(props) {
+    const isOffline = useNetworkStatus();
+    const { user, isLoading } = useAuthLogic(isOffline);
+    useProtectedRoute(user, isLoading, isOffline);
 
     return (
         <AuthContext.Provider value={user}>

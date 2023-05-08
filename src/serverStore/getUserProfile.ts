@@ -15,5 +15,5 @@ const fetchUserProfile = async () => {
 }
 
 export default function useUserProfile() {
-    return useQuery({queryKey: ['userProfile'], queryFn: fetchUserProfile});
+    return useQuery({queryKey: ['userProfile'], queryFn: fetchUserProfile, networkMode: 'online'});
 }

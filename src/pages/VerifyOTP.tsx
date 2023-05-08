@@ -51,10 +51,13 @@ export default function VerifyOTP() {
                             router.push({pathname: "/home"});
                         }
                     }
+                    else {
+                        showErrorToast("Codul introdus este invalid!");
+                    }
                 });
         }
         else {
-            showErrorToast("Codul introdus nu este valid!");
+            showErrorToast("Codul introdus nu este complet!");
         }
         setStatus('off');
     };
