@@ -1,6 +1,7 @@
 # Payfren Mobile App
 
 The mobile app that makes banking easier for you, built using Expo, React Native, and Tamagui components.
+Download the Android version now: https://expo.dev/accounts/payfren/projects/app/builds/408e0698-0471-4132-846a-06958ec234cf
 
 ## Getting Started
 
