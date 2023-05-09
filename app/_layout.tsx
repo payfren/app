@@ -14,11 +14,6 @@ const queryClient = new QueryClient();
 export default function Layout() {
     const [isReady, setReady] = useState(false);
     const colorScheme = useColorScheme();
-    // const currentPath = usePathname();
-
-    // useEffect(() => {
-    //     console.log("Current route:", currentPath);
-    // }, [currentPath]);
 
     useEffect(() => {
         if (Platform.OS === "android") {
@@ -51,16 +46,16 @@ export default function Layout() {
     ) : (
         <Fragment>
             {!isReady && <SplashScreen/>}
-            <QueryClientProvider client={queryClient}>
-                <AuthProvider>
-                    <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
+            <TamaguiProvider config={appConfig} defaultTheme={colorScheme}>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
                         <ToastProvider>
                             <StatusBar translucent={true} style={"auto"}/>
                             <Slot/>
                         </ToastProvider>
-                    </TamaguiProvider>
-                </AuthProvider>
-            </QueryClientProvider>
+                    </AuthProvider>
+                </QueryClientProvider>
+            </TamaguiProvider>
         </Fragment>
     );
 }
