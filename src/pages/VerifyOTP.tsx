@@ -42,13 +42,12 @@ export default function VerifyOTP() {
                     if (response) {
                         // After we have obtained a valid session for the new user, we can create their profile
                         if (from === 'signup') {
+                            // TODO: We are redirected to /home before a profile is created
                             createUserProfile().then(() => {
                                 cleanSignUpStore();
-                                router.push({pathname: "/home"});
                             });
                         } else {
                             cleanLoginStore();
-                            router.push({pathname: "/home"});
                         }
                     }
                     else {

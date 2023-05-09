@@ -56,6 +56,7 @@ function useAuthLogic(isOffline) {
                 return;
             }
             setIsLoading(true);
+            // Verify that if there is a session, its user is still valid
             const {data: session} = await supabase.auth.getUser();
             setUser(session?.user);
         } catch (error) {
@@ -68,7 +69,11 @@ function useAuthLogic(isOffline) {
     useEffect(() => {
         const subscribeToAuthChanges = () => {
             supabase.auth.onAuthStateChange(async (event, session) => {
-                setUser(session?.user);
+                console.log('Supabase auth event:', event);
+                // Avoid setting a session of a deleted user, let getUser() handle it
+                if (event != 'INITIAL_SESSION') {
+                    setUser(session?.user);
+                }
             });
         };
 
@@ -100,8 +105,7 @@ export function AuthProvider(props) {
     const {user, isLoading} = useAuthLogic(isOffline);
     useProtectedRoute(user, isLoading, isOffline);
 
-    // Render children on every isLoading change (kind of hacky)
-    // I should come up with a better way to do this
+    // TODO: Remove this useEffect once we have a better way to handle this
     useEffect(() => {
         props.children;
     }, [isLoading]);
