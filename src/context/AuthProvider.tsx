@@ -1,13 +1,9 @@
 import {useRouter, useSegments} from 'expo-router';
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import supabase from '../lib/supabase';
 import NetInfo from '@react-native-community/netinfo';
 
 const AuthContext = createContext(null);
-
-export function useAuth() {
-    return useContext(AuthContext);
-}
 
 function useProtectedRoute(user, isLoading, isOffline) {
     const segments = useSegments();
@@ -98,7 +94,7 @@ function useAuthLogic(isOffline) {
     return {user, isLoading};
 }
 
-
+// TODO: When entering app in offline mode and there is a valid user in Secure Storage, we get a flickering effect to "/" and then we get to "/home"
 export function AuthProvider(props) {
     const isOffline = useNetworkStatus();
     const {user, isLoading} = useAuthLogic(isOffline);
