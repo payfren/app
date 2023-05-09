@@ -28,5 +28,5 @@ const fetchUserBankAccounts = async () => {
 };
 
 export default function getUserBankAccounts() {
-    return useQuery({queryKey: ['bankAccounts'], queryFn: fetchUserBankAccounts, refetchOnMount: true, refetchInterval: 10000, networkMode: 'online'});
+    return useQuery({queryKey: ['bankAccounts'], queryFn: fetchUserBankAccounts, refetchOnMount: true, refetchInterval: 10000, networkMode: 'online', retry: 3, retryDelay: 1000});
 }
