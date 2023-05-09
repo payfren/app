@@ -11,9 +11,13 @@ const fetchUserProfile = async () => {
     if (error) {
         throw error;
     }
+    if (data.length === 0) {
+        // Retry the query after 1 second
+        throw new Error('Profile not found');
+    }
     return data[0];
 }
 
 export default function useUserProfile() {
-    return useQuery({queryKey: ['userProfile'], queryFn: fetchUserProfile, networkMode: 'online'});
+    return useQuery({queryKey: ['userProfile'], queryFn: fetchUserProfile, networkMode: 'online', retry: 5, retryDelay: 1000});
 }
