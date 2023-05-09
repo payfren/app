@@ -22,7 +22,7 @@ function useProtectedRoute(user, isLoading, isOffline) {
                 }
             }
         }
-    }, [user, segments, isLoading, isOffline, router]);
+    }, [user, isLoading, isOffline]);
 }
 
 function useNetworkStatus() {
