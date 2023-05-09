@@ -3,8 +3,19 @@
     "owner": "payfren",
     "name": "Payfren",
     "slug": "app",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FCFCFC"
+    },
     "android": {
-      "package": "com.payfren.app"
+      "package": "com.payfren.app",
+      "softwareKeyboardLayoutMode": "pan",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptiveIcon.png",
+        "backgroundColor": "#FCFCFC"
+      }
     },
     "ios": {
       "bundleIdentifier": "com.payfren.app"
@@ -17,7 +28,19 @@
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "plugins": [
-      "expo-dev-client"
+      "expo-dev-client",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
     ],
     "extra": {
       "eas": {

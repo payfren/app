@@ -4,9 +4,8 @@
       "developmentClient": true,
       "distribution": "internal"
     },
-    "preview": {
+    "production": {
       "distribution": "internal"
-    },
-    "production": {}
+    }
   }
 }

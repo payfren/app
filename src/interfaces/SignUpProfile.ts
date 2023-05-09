@@ -1,11 +1,13 @@
 export interface ISignUpProfile {
-    phoneNum?: string;
+    phoneNumber?: string;
     givenName?: string;
     familyName?: string;
+    otpCode?: string;
 }
 
-export const defaultProfile: ISignUpProfile = {
-    phoneNum: '+40 ',
-    givenName: '',
-    familyName: '',
+export const defaultSignUp: ISignUpProfile = {
+    phoneNumber: '+40 ',
+    givenName: null,
+    familyName: null,
+    otpCode: null,
 }

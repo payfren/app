@@ -8,7 +8,13 @@ The mobile app that makes banking easier for you, built using Expo, React Native
 - Run `yarn install` to install dependencies
 - Run `yarn start` to install the development client and run the app
 - Run `yarn build` to build the app for production (Android and iOS)
-
+  - On every build, create a .env file in the root directory with the following contents:
+    ```env
+    SUPABASE_URL=<supabase_url>
+    SUPABASE_ANON_KEY=<supabase_anon_key>
+    ```
+    Replace `<supabase_url>` and `<supabase_anon_key>` with your Supabase URL and key respectively.
+  - After build, delete it in order to not be committed to the repository. We do this because if we ignore the file, it will not be seen by the EAS build process.
 ## Dependencies
 
 - [Expo](https://expo.io/)
@@ -26,3 +32,4 @@ The mobile app that makes banking easier for you, built using Expo, React Native
         "softwareKeyboardLayoutMode": "pan"
     ```
   This will not allow the keyboard to resize the screen, but it will allow the keyboard to go over the screen.
+- Implement EAS Secrets for Supabase URL and key, to avoid having to create a .env file on every build.

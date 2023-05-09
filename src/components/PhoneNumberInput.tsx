@@ -1,31 +1,27 @@
-import React from 'react';
-import {Input, Paragraph, Spacer, YStack} from 'tamagui';
-import {useSignUpStore} from '../clientStore/SignUpStore';
+import React, {useState} from 'react';
+import {Input, Paragraph, Spacer, XStack, YStack} from 'tamagui';
 
-export default function PhoneNumberInput() {
-    const profile = useSignUpStore((state) => state.profile);
-    const setProfile = useSignUpStore((state) => state.setProfile);
+export default function PhoneNumberInput({getPhoneNumber, setPhoneNumber, maxWidth} : {getPhoneNumber: () => string, setPhoneNumber: (phoneNumber: string) => void, maxWidth?: number}) {
+    const [inputValue, setInputValue] = useState(getPhoneNumber());
 
+    {/*TODO: Rewrite this function to make it cleaner*/
+    }
     const handlePhoneNumberChange = (text: string) => {
         let formattedPhoneNumber = text.replace(/[^\d+]/g, '');
-        if (formattedPhoneNumber.startsWith('+40')) {
-            formattedPhoneNumber = formattedPhoneNumber.slice(3); // Remove the "+40" prefix
+        if (formattedPhoneNumber.length <= 2) {
+            setInputValue('+40 ');
+            return;
         }
-
-        // Limit the length to 10 digits (excluding the "+40" prefix)
+        if (formattedPhoneNumber.startsWith('+40')) {
+            formattedPhoneNumber = formattedPhoneNumber.slice(3);
+        }
         if (formattedPhoneNumber.length > 10) {
             formattedPhoneNumber = formattedPhoneNumber.substring(0, 10);
         }
-
         if (formattedPhoneNumber.length === 0) {
-            setProfile({...profile, phoneNum: ''});
-            return;
+            setPhoneNumber('');
         }
-
-        // Add the "+40" prefix
         formattedPhoneNumber = '+40' + formattedPhoneNumber;
-
-        // Add spaces between the groups of numbers
         if (formattedPhoneNumber.length > 3) {
             formattedPhoneNumber =
                 formattedPhoneNumber.substring(0, 3) +
@@ -44,21 +40,23 @@ export default function PhoneNumberInput() {
                 ' ' +
                 formattedPhoneNumber.substring(11);
         }
-
-        setProfile({...profile, phoneNum: formattedPhoneNumber});
+        setInputValue(formattedPhoneNumber);
+        setPhoneNumber(formattedPhoneNumber);
     };
 
     return (
         <YStack>
             <Paragraph>Număr de telefon</Paragraph>
             <Spacer size={'$2'}/>
-            <Input
-                cursorColor={'orange'}
-                keyboardType="phone-pad"
-                maxLength={15}
-                onChangeText={handlePhoneNumberChange}
-                value={profile.phoneNum}
-            />
+            <XStack maxWidth={maxWidth}>
+                <Input width={"100%"}
+                       cursorColor={'orange'}
+                       keyboardType={'phone-pad'}
+                       maxLength={15}
+                       onChangeText={handlePhoneNumberChange}
+                       value={inputValue}
+                />
+            </XStack>
         </YStack>
     );
 }
