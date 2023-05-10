@@ -4,8 +4,6 @@ The mobile app that makes banking easier for you and accepting payments faster f
 
 Built using Expo, React Native, and Tamagui components.
 
-Download the Android version now: https://expo.dev/accounts/payfren/projects/app/builds/408e0698-0471-4132-846a-06958ec234cf
-
 ## Informații importante pentru jurizare (în română)
 * Numele echipei: Reactoor
 * Școala de proveniență: Colegiul Național de Informatică „Tudor Vianu” București
