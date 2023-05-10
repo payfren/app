@@ -5,24 +5,22 @@ import NetInfo from '@react-native-community/netinfo';
 
 const AuthContext = createContext(null);
 
-function useProtectedRoute(user, isLoading, isOffline) {
+function useProtectedRoute(user, isOffline) {
     const segments = useSegments();
     const router = useRouter();
     useEffect(() => {
-        if (!isLoading) {
-            if (isOffline) {
-                router.replace('/network-error');
-            } else {
-                const inAuthGroup = segments[0] === '(auth)';
-                const onNetworkError = segments[0] === 'network-error';
-                if (user && (inAuthGroup || onNetworkError)) {
-                    router.replace('/home');
-                } else if (!user && !inAuthGroup) {
-                    router.replace('/');
-                }
+        if (isOffline) {
+            router.replace('/network-error');
+        } else {
+            const inAuthGroup = segments[0] === '(auth)';
+            const onNetworkError = segments[0] === 'network-error';
+            if (user && (inAuthGroup || onNetworkError)) {
+                router.replace('/home');
+            } else if (!user && !inAuthGroup) {
+                router.replace('/');
             }
         }
-    }, [user, isLoading, isOffline, router, segments]);
+    }, [segments, router, user, isOffline]);
 }
 
 function useNetworkStatus() {
@@ -44,36 +42,16 @@ function useNetworkStatus() {
 
 function useAuthLogic(isOffline) {
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(!isOffline);
-
-    const fetchSession = async () => {
-        if (isOffline) {
-            return;
-        }
-        try {
-            setIsLoading(true);
-            // Verify that if there is a session, its user is still valid
-            const {data: session} = await supabase.auth.getUser();
-            setUser(session?.user);
-        } catch (error) {
-            console.error('Error fetching session:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
         const subscribeToAuthChanges = () => {
+            // TODO: Handle the case when there is a valid session but the user has been deleted from the database
             supabase.auth.onAuthStateChange(async (event, session) => {
-                // Avoid setting a session of a deleted user, let getUser() handle it
-                if (event != 'INITIAL_SESSION') {
-                    setUser(session?.user);
-                }
+                setUser(session?.user);
             });
         };
 
         const initializeAuth = async () => {
-            await fetchSession();
             return subscribeToAuthChanges();
         };
 
@@ -91,17 +69,16 @@ function useAuthLogic(isOffline) {
         };
     }, [isOffline]);
 
-    return {user, isLoading};
+    return {user};
 }
 
-// TODO: When entering app in offline mode and there is a valid user in Secure Storage, we get a flickering effect to "/" and then we get to "/home"
 export function AuthProvider(props) {
     const isOffline = useNetworkStatus();
-    const {user, isLoading} = useAuthLogic(isOffline);
-    useProtectedRoute(user, isLoading, isOffline);
+    const {user} = useAuthLogic(isOffline);
+    useProtectedRoute(user, isOffline);
 
     return (
-        <AuthContext.Provider value={{user, isLoading}}>
+        <AuthContext.Provider value={{user}}>
             {props.children}
         </AuthContext.Provider>
     );
