@@ -8,7 +8,7 @@ Built using Expo, React Native, and Tamagui components.
 * Numele echipei: Reactoor
 * Școala de proveniență: Colegiul Național de Informatică „Tudor Vianu” București
 * Link video pitch: [Click here!](https://youtu.be/Mu6Ppvncr8M)
-* Link video demo: TBP
+* Link video demo: [Click here!](https://youtu.be/cK2d0PuVnaI)
 
 ## Getting Started
 
