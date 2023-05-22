@@ -86,7 +86,22 @@ serve(async (req) => {
             bank_id: "",
             bank_logo: "",
         }
-        const {data: accountStatusResponse} = await supabase.from('bank_accounts').select('bank_id').eq('nordigen_account_id', accountId);
+        const {data: accountStatusResponse, error: accountStatusError} = await supabase.from('bank_accounts').select('bank_id').eq('nordigen_account_id', accountId);
+        if (accountStatusError) {
+            console.log("Error while getting the accounts data from database: ", accountStatusError.message);
+            return new Response(
+                JSON.stringify({
+                    error: "Error while getting the accounts data",
+                    message: accountStatusError.message,
+                }),
+                {
+                    status: 500,
+                    headers: {
+                        "content-type": "application/json; charset=UTF-8",
+                    },
+                }
+            );
+        }
         const accountStatus = accountStatusResponse![0];
         // If institution_id is not null, it means that the account data is already in the database
         if (accountStatus.bank_id !== null) {
@@ -102,6 +117,21 @@ serve(async (req) => {
                 "Authorization": `Bearer ${authToken}`,
             }
         });
+        if (balanceResponse.status !== 200) {
+            console.log("Error while getting the balances data from Nordigen: ", await balanceResponse.json());
+            return new Response(
+                JSON.stringify({
+                    error: "Error while getting the accounts data",
+                    message: balanceResponse.statusText,
+                }),
+                {
+                    status: 500,
+                    headers: {
+                        "content-type": "application/json; charset=UTF-8",
+                    },
+                }
+            );
+        }
         const balanceData = await balanceResponse.json();
         account.balance = balanceData['balances'][0]['balanceAmount']['amount'];
         account.currency = balanceData['balances'][0]['balanceAmount']['currency'];
@@ -115,6 +145,7 @@ serve(async (req) => {
                 currency: account.currency,
             }, {onConflict: 'nordigen_account_id'});
             if (error) {
+                console.log("Error while updating the accounts data: ", error.message);
                 return new Response(
                     JSON.stringify({
                         error: "Error while updating the accounts data",
@@ -139,6 +170,21 @@ serve(async (req) => {
                 "Authorization": `Bearer ${authToken}`,
             }
         });
+        if (accountResponse.status !== 200) {
+            console.log("Error while getting the accounts data from Nordigen: ", accountResponse.statusText);
+            return new Response(
+                JSON.stringify({
+                    error: "Error while getting the accounts data",
+                    message: accountResponse.statusText,
+                }),
+                {
+                    status: 500,
+                    headers: {
+                        "content-type": "application/json; charset=UTF-8",
+                    },
+                }
+            );
+        }
         const accountData = await accountResponse.json();
         account.iban = accountData['iban'];
         // Format the IBAN to be more readable, simply adding a space every 4 characters
@@ -157,12 +203,28 @@ serve(async (req) => {
                 "Authorization": `Bearer ${authToken}`,
             }
         });
+        if (bankDataResponse.status !== 200) {
+            console.log("Error while getting institution details from Nordigen: ", bankDataResponse.statusText);
+            return new Response(
+                JSON.stringify({
+                    error: "Error while getting the bank data",
+                    message: "The bank data could not be retrieved from Nordigen",
+                }),
+                {
+                    status: 500,
+                    headers: {
+                        "content-type": "application/json; charset=UTF-8",
+                    },
+                }
+            );
+        }
         const bankData = await bankDataResponse.json();
         account.bank_name = bankData['name'];
         account.bank_logo = bankData['logo'];
 
         const {error} = await supabase.from('bank_accounts').upsert([account], {onConflict: 'nordigen_account_id'});
         if (error) {
+            console.log("Error while upserting new record of bank account: ", error.message);
             return new Response(
                 JSON.stringify({
                     error: "Error while updating the accounts data",
