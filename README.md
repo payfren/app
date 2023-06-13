@@ -15,7 +15,7 @@ Built using Expo, React Native, and Tamagui components.
 - Clone this repository
 - Run `yarn install` to install dependencies
 - Run `yarn run start:development` to install the development client and run the app
-- Run `yarn run build:android` to build the app for production (only Android for now, no Macbook to test this on IOS :/)
+- Run `yarn run build:android` to build the app for production
   - On every build, create a .env file in the root directory with the following contents:
     ```env
     SUPABASE_URL=<supabase_url>
