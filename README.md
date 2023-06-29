@@ -1,4 +1,5 @@
-# Payfren by _Team Reactoor_
+# Payfren Banking App
+<img width="1158" alt="Screenshot 2023-06-29 at 12 40 05" src="https://github.com/payfren/app/assets/37705192/ec7cfbfe-db16-451b-af46-c16a75a8cb56">
 
 The mobile app that makes banking easier for you and accepting payments faster for merchants.
 
